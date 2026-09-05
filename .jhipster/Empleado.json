@@ -1,0 +1,74 @@
+{
+  "annotations": {
+    "changelogDate": "20231211000823"
+  },
+  "applications": ["jag"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "apellido",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cuit",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tipoIva",
+      "fieldType": "TipoIva",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "RESP_NO_INSCRIPTO,RESP_INSCRIPTO"
+    },
+    {
+      "fieldName": "domicilio",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "email",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "pattern"],
+      "fieldValidateRulesPattern": "^(.+)@(\\S+)$"
+    },
+    {
+      "fieldName": "fechaIngreso",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "telefono",
+      "fieldType": "String",
+      "fieldValidateRules": ["pattern"],
+      "fieldValidateRulesPattern": "^(\\d{3}[- .]?){2}\\d{3}$"
+    },
+    {
+      "fieldName": "genero",
+      "fieldType": "Gender",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "HOMBRE (H),MUJER (M)"
+    }
+  ],
+  "name": "Empleado",
+  "relationships": [
+    {
+      "otherEntityField": "login",
+      "otherEntityName": "user",
+      "relationshipName": "usuario",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required",
+      "relationshipWithBuiltInEntity": true
+    },
+    {
+      "otherEntityName": "orden",
+      "otherEntityRelationshipName": "usuario",
+      "relationshipName": "orden",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

@@ -1,0 +1,188 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-orden-heading" data-cy="OrdenCreateUpdateHeading">Crear o editar Orden</h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_afiliado">Afiliado</label>
+          <input type="number" class="form-control" name="afiliado" id="field_afiliado" data-cy="afiliado" formControlName="afiliado" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_protocolo">Protocolo</label>
+          <input type="number" class="form-control" name="protocolo" id="field_protocolo" data-cy="protocolo" formControlName="protocolo" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_fechaOrden">Fecha Orden</label>
+          <div class="input-group">
+            <input
+              id="field_fechaOrden"
+              data-cy="fechaOrden"
+              type="text"
+              class="form-control"
+              name="fechaOrden"
+              ngbDatepicker
+              #fechaOrdenDp="ngbDatepicker"
+              formControlName="fechaOrden"
+            />
+            <button type="button" class="btn btn-secondary" (click)="fechaOrdenDp.toggle()"><fa-icon icon="calendar-alt" /></button>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_fechaPrescripcion">Fecha Prescripcion</label>
+          <div class="input-group">
+            <input
+              id="field_fechaPrescripcion"
+              data-cy="fechaPrescripcion"
+              type="text"
+              class="form-control"
+              name="fechaPrescripcion"
+              ngbDatepicker
+              #fechaPrescripcionDp="ngbDatepicker"
+              formControlName="fechaPrescripcion"
+            />
+            <button type="button" class="btn btn-secondary" (click)="fechaPrescripcionDp.toggle()"><fa-icon icon="calendar-alt" /></button>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_totalOrden">Total Orden</label>
+          <input
+            type="number"
+            class="form-control"
+            name="totalOrden"
+            id="field_totalOrden"
+            data-cy="totalOrden"
+            formControlName="totalOrden"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_sumaUb">Suma Ub</label>
+          <input type="number" class="form-control" name="sumaUb" id="field_sumaUb" data-cy="sumaUb" formControlName="sumaUb" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_fechaCreacion">Fecha Creacion</label>
+          <div class="d-flex">
+            <input
+              id="field_fechaCreacion"
+              data-cy="fechaCreacion"
+              type="datetime-local"
+              class="form-control"
+              name="fechaCreacion"
+              formControlName="fechaCreacion"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_paquete">Paquete</label>
+          <select
+            class="form-control"
+            id="field_paquete"
+            data-cy="paquete"
+            name="paquete"
+            formControlName="paquete"
+            [compareWith]="comparePaquete"
+          >
+            @if (editForm.get(['paquete'])!.value === null) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (paqueteOption of paquetesSharedCollection(); track $index) {
+              <option [ngValue]="paqueteOption">{{ paqueteOption.paqDescrip }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['paquete'])!.invalid && (editForm.get(['paquete'])!.dirty || editForm.get(['paquete'])!.touched)) {
+          <div>
+            @if (editForm.get(['paquete'])?.errors?.required) {
+              <small class="form-text text-danger">Este campo es obligatorio.</small>
+            }
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_usuario">Usuario</label>
+          <select
+            class="form-control"
+            id="field_usuario"
+            data-cy="usuario"
+            name="usuario"
+            formControlName="usuario"
+            [compareWith]="compareEmpleado"
+          >
+            @if (editForm.get(['usuario'])!.value === null) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (empleadoOption of empleadosSharedCollection(); track $index) {
+              <option [ngValue]="empleadoOption">{{ empleadoOption.id }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['usuario'])!.invalid && (editForm.get(['usuario'])!.dirty || editForm.get(['usuario'])!.touched)) {
+          <div>
+            @if (editForm.get(['usuario'])?.errors?.required) {
+              <small class="form-text text-danger">Este campo es obligatorio.</small>
+            }
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_bioquimico">Bioquimico</label>
+          <select
+            class="form-control"
+            id="field_bioquimico"
+            data-cy="bioquimico"
+            name="bioquimico"
+            formControlName="bioquimico"
+            [compareWith]="compareBioquimico"
+          >
+            @if (editForm.get(['bioquimico'])!.value === null) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (bioquimicoOption of bioquimicosSharedCollection(); track $index) {
+              <option [ngValue]="bioquimicoOption">{{ bioquimicoOption.nombreCompleto }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['bioquimico'])!.invalid && (editForm.get(['bioquimico'])!.dirty || editForm.get(['bioquimico'])!.touched)) {
+          <div>
+            @if (editForm.get(['bioquimico'])?.errors?.required) {
+              <small class="form-text text-danger">Este campo es obligatorio.</small>
+            }
+          </div>
+        }
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span>Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span>Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

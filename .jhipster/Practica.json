@@ -1,0 +1,40 @@
+{
+  "annotations": {
+    "changelogDate": "20231211001123"
+  },
+  "applications": ["jag"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "cantidad",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "min"],
+      "fieldValidateRulesMin": "1"
+    },
+    {
+      "fieldName": "pvalor",
+      "fieldType": "BigDecimal"
+    }
+  ],
+  "name": "Practica",
+  "relationships": [
+    {
+      "otherEntityField": "codigo",
+      "otherEntityName": "prestacion",
+      "relationshipName": "prestacion",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "orden",
+      "otherEntityRelationshipName": "practicas",
+      "relationshipName": "orden",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

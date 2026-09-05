@@ -1,0 +1,82 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (orden(); as ordenRef) {
+      <div>
+        <h2 data-cy="ordenDetailsHeading"><span>Orden</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ ordenRef.id }}</span>
+          </dd>
+          <dt><span>Afiliado</span></dt>
+          <dd>
+            <span>{{ ordenRef.afiliado }}</span>
+          </dd>
+          <dt><span>Protocolo</span></dt>
+          <dd>
+            <span>{{ ordenRef.protocolo }}</span>
+          </dd>
+          <dt><span>Fecha Orden</span></dt>
+          <dd>
+            <span>{{ ordenRef.fechaOrden | formatMediumDate }}</span>
+          </dd>
+          <dt><span>Fecha Prescripcion</span></dt>
+          <dd>
+            <span>{{ ordenRef.fechaPrescripcion | formatMediumDate }}</span>
+          </dd>
+          <dt><span>Total Orden</span></dt>
+          <dd>
+            <span>{{ ordenRef.totalOrden }}</span>
+          </dd>
+          <dt><span>Suma Ub</span></dt>
+          <dd>
+            <span>{{ ordenRef.sumaUb }}</span>
+          </dd>
+          <dt><span>Fecha Creacion</span></dt>
+          <dd>
+            <span>{{ ordenRef.fechaCreacion | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span>Paquete</span></dt>
+          <dd>
+            @if (orden()!.paquete) {
+              <div>
+                <a [routerLink]="['/paquete', orden()!.paquete?.id, 'view']">{{ ordenRef.paquete?.paqDescrip }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span>Usuario</span></dt>
+          <dd>
+            @if (orden()!.usuario) {
+              <div>
+                <a [routerLink]="['/empleado', orden()!.usuario?.id, 'view']">{{ ordenRef.usuario?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span>Bioquimico</span></dt>
+          <dd>
+            @if (orden()!.bioquimico) {
+              <div>
+                <a [routerLink]="['/bioquimico', orden()!.bioquimico?.id, 'view']">{{ ordenRef.bioquimico?.nombreCompleto }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/orden', ordenRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

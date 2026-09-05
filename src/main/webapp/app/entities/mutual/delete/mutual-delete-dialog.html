@@ -1,0 +1,22 @@
+@if (mutual) {
+  <form name="deleteForm" (ngSubmit)="confirmDelete(mutual.id)">
+    <div class="modal-header">
+      <h4 class="modal-title" data-cy="mutualDeleteDialogHeading">Confirmar operación de borrado</h4>
+    </div>
+
+    <div class="modal-body">
+      <jhi-alert-error />
+      <p id="jhi-delete-mutual-heading">¿Seguro que quiere eliminar Mutual {{ mutual.id }}?</p>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancel()">
+        <fa-icon icon="ban" />&nbsp;<span>Cancelar</span>
+      </button>
+
+      <button id="jhi-confirm-delete-mutual" data-cy="entityConfirmDeleteButton" type="submit" class="btn btn-danger">
+        <fa-icon icon="times" />&nbsp;<span>Eliminar</span>
+      </button>
+    </div>
+  </form>
+}

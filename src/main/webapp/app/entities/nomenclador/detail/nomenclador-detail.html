@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (nomenclador(); as nomencladorRef) {
+      <div>
+        <h2 data-cy="nomencladorDetailsHeading"><span>Nomenclador</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ nomencladorRef.id }}</span>
+          </dd>
+          <dt><span>Nombre</span></dt>
+          <dd>
+            <span>{{ nomencladorRef.nombre }}</span>
+          </dd>
+          <dt><span>Descripcion</span></dt>
+          <dd>
+            <span>{{ nomencladorRef.descripcion }}</span>
+          </dd>
+          <dt><span>Tipo</span></dt>
+          <dd>
+            <span>{{ { null: '', NBU: 'NBU', INOS: 'INOS' }[nomencladorRef.tipo ?? 'null'] }}</span>
+          </dd>
+          <dt><span>Mutual</span></dt>
+          <dd>
+            @if (nomenclador()!.mutual) {
+              <div>
+                <a [routerLink]="['/mutual', nomenclador()!.mutual?.id, 'view']">{{ nomencladorRef.mutual?.nombre }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/nomenclador', nomencladorRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

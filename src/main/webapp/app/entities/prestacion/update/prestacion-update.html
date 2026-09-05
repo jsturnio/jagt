@@ -1,0 +1,108 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-prestacion-heading" data-cy="PrestacionCreateUpdateHeading">Crear o editar Prestacion</h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let codigoRef = editForm.get('codigo')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_codigo" ngbTooltip="Codigo: Codigo Base NBU">Codigo</label>
+          <input type="number" class="form-control" name="codigo" id="field_codigo" data-cy="codigo" formControlName="codigo" />
+          @if (codigoRef.invalid && (codigoRef.dirty || codigoRef.touched)) {
+            <div>
+              @if (codigoRef.errors?.required) {
+                <small class="form-text text-danger">Este campo es obligatorio.</small>
+              }
+              <small class="form-text text-danger" [hidden]="!codigoRef.errors?.number">Este campo debe ser un número.</small>
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_codigoInos">Codigo Inos</label>
+          <input
+            type="text"
+            class="form-control"
+            name="codigoInos"
+            id="field_codigoInos"
+            data-cy="codigoInos"
+            formControlName="codigoInos"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_valorUb">Valor Ub</label>
+          <input type="number" class="form-control" name="valorUb" id="field_valorUb" data-cy="valorUb" formControlName="valorUb" />
+        </div>
+
+        <div class="mb-3 form-check">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            name="reqAutorizacion"
+            id="field_reqAutorizacion"
+            data-cy="reqAutorizacion"
+            formControlName="reqAutorizacion"
+          />
+          <label
+            class="form-check-label"
+            for="field_reqAutorizacion"
+            ngbTooltip="Indica que la Practica requiere autorizacion por la Obra Social"
+            >Req Autorizacion</label
+          >
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_nomenclador">Nomenclador</label>
+          <select
+            class="form-control"
+            id="field_nomenclador"
+            data-cy="nomenclador"
+            name="nomenclador"
+            formControlName="nomenclador"
+            [compareWith]="compareNomenclador"
+          >
+            @if (editForm.get(['nomenclador'])!.value === null) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (nomencladorOption of nomencladorsSharedCollection(); track $index) {
+              <option [ngValue]="nomencladorOption">{{ nomencladorOption.nombre }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['nomenclador'])!.invalid && (editForm.get(['nomenclador'])!.dirty || editForm.get(['nomenclador'])!.touched)) {
+          <div>
+            @if (editForm.get(['nomenclador'])?.errors?.required) {
+              <small class="form-text text-danger">Este campo es obligatorio.</small>
+            }
+          </div>
+        }
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span>Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span>Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

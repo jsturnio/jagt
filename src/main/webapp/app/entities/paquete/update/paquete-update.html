@@ -1,0 +1,149 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-paquete-heading" data-cy="PaqueteCreateUpdateHeading">Crear o editar Paquete</h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_paqDescrip">Paq Descrip</label>
+          <input
+            type="text"
+            class="form-control"
+            name="paqDescrip"
+            id="field_paqDescrip"
+            data-cy="paqDescrip"
+            formControlName="paqDescrip"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_nombre">Nombre</label>
+          <input type="text" class="form-control" name="nombre" id="field_nombre" data-cy="nombre" formControlName="nombre" />
+        </div>
+
+        @let periodoRef = editForm.get('periodo')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_periodo">Periodo</label>
+          <div class="input-group">
+            <input
+              id="field_periodo"
+              data-cy="periodo"
+              type="text"
+              class="form-control"
+              name="periodo"
+              ngbDatepicker
+              #periodoDp="ngbDatepicker"
+              formControlName="periodo"
+            />
+            <button type="button" class="btn btn-secondary" (click)="periodoDp.toggle()"><fa-icon icon="calendar-alt" /></button>
+          </div>
+          @if (periodoRef.invalid && (periodoRef.dirty || periodoRef.touched)) {
+            <div>
+              @if (periodoRef.errors?.required) {
+                <small class="form-text text-danger">Este campo es obligatorio.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_estado">Estado</label>
+          <select class="form-control" name="estado" formControlName="estado" id="field_estado" data-cy="estado">
+            <option [ngValue]="null"></option>
+            @for (estadoPaquete of estadoPaqueteValues; track $index) {
+              <option [value]="estadoPaquete">
+                {{
+                  {
+                    null: '',
+                    EN_CARGA: 'EN_CARGA',
+                    FP_GENERADO: 'FP_GENERADO',
+                    FACTURADO: 'FACTURADO',
+                    PAGO_MUTUAL: 'PAGO_MUTUAL',
+                    LIQUIDADA_A_SOCIOS: 'LIQUIDADA_A_SOCIOS',
+                    ARCHIVADO: 'ARCHIVADO',
+                  }[estadoPaquete]
+                }}
+              </option>
+            }
+          </select>
+        </div>
+
+        @let descripcionRef = editForm.get('descripcion')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_descripcion">Descripcion</label>
+          <input
+            type="text"
+            class="form-control"
+            name="descripcion"
+            id="field_descripcion"
+            data-cy="descripcion"
+            formControlName="descripcion"
+          />
+          @if (descripcionRef.invalid && (descripcionRef.dirty || descripcionRef.touched)) {
+            <div>
+              @if (descripcionRef.errors?.maxlength) {
+                <small class="form-text text-danger">Este campo no puede superar más de 60 caracteres.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_tipoIva">Tipo Iva</label>
+          <select class="form-control" name="tipoIva" formControlName="tipoIva" id="field_tipoIva" data-cy="tipoIva">
+            <option [ngValue]="null"></option>
+            @for (tipoIva of tipoIvaValues; track $index) {
+              <option [value]="tipoIva">
+                {{ { null: '', RESP_NO_INSCRIPTO: 'RESP_NO_INSCRIPTO', RESP_INSCRIPTO: 'RESP_INSCRIPTO' }[tipoIva] }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_plan">Plan</label>
+          <select class="form-control" id="field_plan" data-cy="plan" name="plan" formControlName="plan" [compareWith]="comparePlanMutual">
+            @if (editForm.get(['plan'])!.value === null) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (planMutualOption of planMutualsSharedCollection(); track $index) {
+              <option [ngValue]="planMutualOption">{{ planMutualOption.categoria }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['plan'])!.invalid && (editForm.get(['plan'])!.dirty || editForm.get(['plan'])!.touched)) {
+          <div>
+            @if (editForm.get(['plan'])?.errors?.required) {
+              <small class="form-text text-danger">Este campo es obligatorio.</small>
+            }
+          </div>
+        }
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span>Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span>Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

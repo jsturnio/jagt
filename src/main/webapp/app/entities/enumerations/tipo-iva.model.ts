@@ -1,0 +1,5 @@
+export enum TipoIva {
+  RESP_NO_INSCRIPTO = 'RESP_NO_INSCRIPTO',
+
+  RESP_INSCRIPTO = 'RESP_INSCRIPTO',
+}

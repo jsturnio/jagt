@@ -1,0 +1,154 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-mutual-heading" data-cy="MutualCreateUpdateHeading">Crear o editar Mutual</h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let nombreRef = editForm.get('nombre')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_nombre">Nombre</label>
+          <input type="text" class="form-control" name="nombre" id="field_nombre" data-cy="nombre" formControlName="nombre" />
+          @if (nombreRef.invalid && (nombreRef.dirty || nombreRef.touched)) {
+            <div>
+              @if (nombreRef.errors?.required) {
+                <small class="form-text text-danger">Este campo es obligatorio.</small>
+              }
+              @if (nombreRef.errors?.maxlength) {
+                <small class="form-text text-danger">Este campo no puede superar más de 7 caracteres.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let descripcionRef = editForm.get('descripcion')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_descripcion">Descripcion</label>
+          <input
+            type="text"
+            class="form-control"
+            name="descripcion"
+            id="field_descripcion"
+            data-cy="descripcion"
+            formControlName="descripcion"
+          />
+          @if (descripcionRef.invalid && (descripcionRef.dirty || descripcionRef.touched)) {
+            <div>
+              @if (descripcionRef.errors?.maxlength) {
+                <small class="form-text text-danger">Este campo no puede superar más de 100 caracteres.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let cuitRef = editForm.get('cuit')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_cuit">Cuit</label>
+          <input type="text" class="form-control" name="cuit" id="field_cuit" data-cy="cuit" formControlName="cuit" />
+          @if (cuitRef.invalid && (cuitRef.dirty || cuitRef.touched)) {
+            <div>
+              @if (cuitRef.errors?.maxlength) {
+                <small class="form-text text-danger">Este campo no puede superar más de 20 caracteres.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let tipoIvaRef = editForm.get('tipoIva')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_tipoIva">Tipo Iva</label>
+          <select class="form-control" name="tipoIva" formControlName="tipoIva" id="field_tipoIva" data-cy="tipoIva">
+            <option [ngValue]="null"></option>
+            @for (tipoIva of tipoIvaValues; track $index) {
+              <option [value]="tipoIva">
+                {{ { null: '', RESP_NO_INSCRIPTO: 'RESP_NO_INSCRIPTO', RESP_INSCRIPTO: 'RESP_INSCRIPTO' }[tipoIva] }}
+              </option>
+            }
+          </select>
+          @if (tipoIvaRef.invalid && (tipoIvaRef.dirty || tipoIvaRef.touched)) {
+            <div>
+              @if (tipoIvaRef.errors?.required) {
+                <small class="form-text text-danger">Este campo es obligatorio.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let domicilioRef = editForm.get('domicilio')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_domicilio">Domicilio</label>
+          <input type="text" class="form-control" name="domicilio" id="field_domicilio" data-cy="domicilio" formControlName="domicilio" />
+          @if (domicilioRef.invalid && (domicilioRef.dirty || domicilioRef.touched)) {
+            <div>
+              @if (domicilioRef.errors?.maxlength) {
+                <small class="form-text text-danger">Este campo no puede superar más de 50 caracteres.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let telefonoRef = editForm.get('telefono')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_telefono">Telefono</label>
+          <input type="text" class="form-control" name="telefono" id="field_telefono" data-cy="telefono" formControlName="telefono" />
+          @if (telefonoRef.invalid && (telefonoRef.dirty || telefonoRef.touched)) {
+            <div>
+              @if (telefonoRef.errors?.pattern) {
+                <small class="form-text text-danger">Este campo debe seguir el patrón Telefono.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let emailRef = editForm.get('email')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_email">Email</label>
+          <input type="text" class="form-control" name="email" id="field_email" data-cy="email" formControlName="email" />
+          @if (emailRef.invalid && (emailRef.dirty || emailRef.touched)) {
+            <div>
+              @if (emailRef.errors?.pattern) {
+                <small class="form-text text-danger">Este campo debe seguir el patrón Email.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3 form-check">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            name="habilitada"
+            id="field_habilitada"
+            data-cy="habilitada"
+            formControlName="habilitada"
+          />
+          <label class="form-check-label" for="field_habilitada">Habilitada</label>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span>Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span>Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

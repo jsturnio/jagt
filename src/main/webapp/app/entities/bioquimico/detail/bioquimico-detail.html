@@ -1,0 +1,98 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (bioquimico(); as bioquimicoRef) {
+      <div>
+        <h2 data-cy="bioquimicoDetailsHeading"><span>Bioquimico</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ bioquimicoRef.id }}</span>
+          </dd>
+          <dt><span>Matricula</span></dt>
+          <dd>
+            <span>{{ bioquimicoRef.matricula }}</span>
+          </dd>
+          <dt><span>Cuit</span></dt>
+          <dd>
+            <span>{{ bioquimicoRef.cuit }}</span>
+          </dd>
+          <dt><span>Tipo Iva</span></dt>
+          <dd>
+            <span>{{
+              { null: '', RESP_NO_INSCRIPTO: 'RESP_NO_INSCRIPTO', RESP_INSCRIPTO: 'RESP_INSCRIPTO' }[bioquimicoRef.tipoIva ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span>Domicilio Profesional</span></dt>
+          <dd>
+            <span>{{ bioquimicoRef.domicilioProfesional }}</span>
+          </dd>
+          <dt><span>Estado</span></dt>
+          <dd>
+            <span>{{
+              { null: '', SOCIO_ACTIVO: 'SOCIO_ACTIVO', NO_CARGA: 'NO_CARGA', INACTIVO: 'INACTIVO' }[bioquimicoRef.estado ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span>Email</span></dt>
+          <dd>
+            <span>{{ bioquimicoRef.email }}</span>
+          </dd>
+          <dt><span>Fecha Ingreso</span></dt>
+          <dd>
+            <span>{{ bioquimicoRef.fechaIngreso | formatMediumDate }}</span>
+          </dd>
+          <dt><span>Telefono</span></dt>
+          <dd>
+            <span>{{ bioquimicoRef.telefono }}</span>
+          </dd>
+          <dt><span>Nombre En Dosep</span></dt>
+          <dd>
+            <span>{{ bioquimicoRef.nombreEnDosep }}</span>
+          </dd>
+          <dt><span>Nro Prestador Osde</span></dt>
+          <dd>
+            <span>{{ bioquimicoRef.nroPrestadorOsde }}</span>
+          </dd>
+          <dt><span>Ing Brutos</span></dt>
+          <dd>
+            <span>{{ bioquimicoRef.ingBrutos }}</span>
+          </dd>
+          <dt><span>Nro Jubilacion</span></dt>
+          <dd>
+            <span>{{ bioquimicoRef.nroJubilacion }}</span>
+          </dd>
+          <dt><span>Nro Laboratorio</span></dt>
+          <dd>
+            <span>{{ bioquimicoRef.nroLaboratorio }}</span>
+          </dd>
+          <dt><span>Nombre Completo</span></dt>
+          <dd>
+            <span>{{ bioquimicoRef.nombreCompleto }}</span>
+          </dd>
+          <dt><span>Genero</span></dt>
+          <dd>
+            <span>{{ { null: '', HOMBRE: 'H', MUJER: 'M' }[bioquimicoRef.genero ?? 'null'] }}</span>
+          </dd>
+          <dt><span>User</span></dt>
+          <dd>
+            <span>{{ bioquimicoRef.user?.login }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/bioquimico', bioquimicoRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

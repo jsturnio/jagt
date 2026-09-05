@@ -1,0 +1,32 @@
+<h2>Orden: Practica</h2>
+
+<section class="mb-4">
+  <h3>Ordens</h3>
+  <div style="width: 100%; height: 360px">
+    <ag-grid-angular
+      [theme]="theme"
+      class="ag-theme-balham"
+      style="width: 100%; height: 100%"
+      [rowData]="ordens()"
+      [columnDefs]="ordenColumnDefs"
+      [defaultColDef]="{ sortable: true, filter: true, resizable: true }"
+      [rowSelection]="{ mode: 'singleRow' }"
+      (selectionChanged)="onSelectionChangedOrden($event)"
+    />
+  </div>
+</section>
+<section class="mb-4">
+  <h3>Practicas</h3>
+  <div style="width: 100%; height: 360px">
+    <ag-grid-angular
+      [theme]="theme"
+      class="ag-theme-balham"
+      style="width: 100%; height: 100%"
+      [rowData]="practicas()"
+      [columnDefs]="practicaColumnDefs"
+      [defaultColDef]="{ sortable: true, filter: true, resizable: true }"
+      [rowSelection]="{ mode: 'singleRow' }"
+      (selectionChanged)="onSelectionChangedPractica($event)"
+    />
+  </div>
+</section>

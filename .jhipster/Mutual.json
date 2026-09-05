@@ -1,0 +1,77 @@
+{
+  "annotations": {
+    "changelogDate": "20231211000423"
+  },
+  "applications": ["jag"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "7"
+    },
+    {
+      "fieldName": "descripcion",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "cuit",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "20"
+    },
+    {
+      "fieldName": "tipoIva",
+      "fieldType": "TipoIva",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "RESP_NO_INSCRIPTO,RESP_INSCRIPTO"
+    },
+    {
+      "fieldName": "domicilio",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "telefono",
+      "fieldType": "String",
+      "fieldValidateRules": ["pattern"],
+      "fieldValidateRulesPattern": "^(\\d{3}[- .]?){2}\\\\d{4}$"
+    },
+    {
+      "fieldName": "email",
+      "fieldType": "String",
+      "fieldValidateRules": ["pattern"],
+      "fieldValidateRulesPattern": "^(.+)@(\\\\S+)$"
+    },
+    {
+      "fieldName": "habilitada",
+      "fieldType": "Boolean"
+    }
+  ],
+  "name": "Mutual",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "nombre",
+      "otherEntityName": "nomenclador",
+      "otherEntityRelationshipName": "mutual",
+      "relationshipName": "nomenclador",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityField": "categoria",
+      "otherEntityName": "planMutual",
+      "otherEntityRelationshipName": "mutual",
+      "relationshipName": "plan",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

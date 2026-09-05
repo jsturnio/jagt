@@ -1,0 +1,48 @@
+{
+  "annotations": {
+    "changelogDate": "20231211000523"
+  },
+  "applications": ["jag"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "categoria",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "7"
+    },
+    {
+      "fieldName": "etiquetaReporte",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "7"
+    },
+    {
+      "fieldName": "prestacionesImportadas",
+      "fieldType": "Boolean"
+    }
+  ],
+  "name": "PlanMutual",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "nombre",
+      "otherEntityName": "paquete",
+      "otherEntityRelationshipName": "plan",
+      "relationshipName": "paquete",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityField": "nombre",
+      "otherEntityName": "mutual",
+      "otherEntityRelationshipName": "plan",
+      "relationshipName": "mutual",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

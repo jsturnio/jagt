@@ -1,0 +1,50 @@
+{
+  "annotations": {
+    "changelogDate": "20231211000723"
+  },
+  "applications": ["jag"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "maxlength"],
+      "fieldValidateRulesMaxlength": "12"
+    },
+    {
+      "fieldName": "descripcion",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "100"
+    },
+    {
+      "fieldName": "tipo",
+      "fieldType": "TipoNomenclador",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "NBU,INOS"
+    }
+  ],
+  "name": "Nomenclador",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "codigo",
+      "otherEntityName": "prestacion",
+      "otherEntityRelationshipName": "nomenclador",
+      "relationshipName": "prestacion",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityField": "nombre",
+      "otherEntityName": "mutual",
+      "otherEntityRelationshipName": "nomenclador",
+      "relationshipName": "mutual",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

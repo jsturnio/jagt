@@ -1,0 +1,10 @@
+{
+  "ignore_dirs": [
+    "node_modules",
+    "dist",
+    ".angular",
+    "coverage",
+    ".gradle",
+    "target"
+  ]
+}

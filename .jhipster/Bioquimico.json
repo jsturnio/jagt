@@ -1,0 +1,106 @@
+{
+  "annotations": {
+    "changelogDate": "20231211000923"
+  },
+  "applications": ["jag"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "matricula",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "cuit",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "tipoIva",
+      "fieldType": "TipoIva",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "RESP_NO_INSCRIPTO,RESP_INSCRIPTO"
+    },
+    {
+      "fieldName": "domicilioProfesional",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "estado",
+      "fieldType": "EstadoSocio",
+      "fieldValues": "SOCIO_ACTIVO,NO_CARGA,INACTIVO"
+    },
+    {
+      "fieldName": "email",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "pattern"],
+      "fieldValidateRulesPattern": "^(.+)@(\\S+)$"
+    },
+    {
+      "fieldName": "fechaIngreso",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "telefono",
+      "fieldType": "String",
+      "fieldValidateRules": ["pattern"],
+      "fieldValidateRulesPattern": "^(\\d{3}[- .]?){2}\\d{3}$"
+    },
+    {
+      "fieldName": "nombreEnDosep",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nroPrestadorOsde",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "ingBrutos",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "20"
+    },
+    {
+      "fieldName": "nroJubilacion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nroLaboratorio",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "nombreCompleto",
+      "fieldType": "String",
+      "options": {
+        "dtoDisplay": "user.getLastName() + ', ' + user.getFirstName() + ' (' + getId() + ')'",
+        "transient": true
+      }
+    },
+    {
+      "fieldName": "genero",
+      "fieldType": "Gender",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "HOMBRE (H),MUJER (M)"
+    }
+  ],
+  "name": "Bioquimico",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "login",
+      "otherEntityName": "user",
+      "relationshipName": "user",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one",
+      "relationshipValidateRules": "required",
+      "relationshipWithBuiltInEntity": true
+    },
+    {
+      "otherEntityName": "orden",
+      "otherEntityRelationshipName": "bioquimico",
+      "relationshipName": "ordenes",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

@@ -1,0 +1,211 @@
+<div>
+  <h2 id="page-heading" data-cy="BioquimicoHeading">
+    <span>Bioquimicos</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span>Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-bioquimico"
+        [routerLink]="['/bioquimico/new']"
+      >
+        <fa-icon icon="plus" />
+        <span>Crear nuevo Bioquimico</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (bioquimicos().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span>Ningún Bioquimicos encontrado</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span>ID</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="matricula">
+              <div class="d-flex">
+                <span>Matricula</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="cuit">
+              <div class="d-flex">
+                <span>Cuit</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="tipoIva">
+              <div class="d-flex">
+                <span>Tipo Iva</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="domicilioProfesional">
+              <div class="d-flex">
+                <span>Domicilio Profesional</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="estado">
+              <div class="d-flex">
+                <span>Estado</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="email">
+              <div class="d-flex">
+                <span>Email</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="fechaIngreso">
+              <div class="d-flex">
+                <span>Fecha Ingreso</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="telefono">
+              <div class="d-flex">
+                <span>Telefono</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nombreEnDosep">
+              <div class="d-flex">
+                <span>Nombre En Dosep</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nroPrestadorOsde">
+              <div class="d-flex">
+                <span>Nro Prestador Osde</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="ingBrutos">
+              <div class="d-flex">
+                <span>Ing Brutos</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nroJubilacion">
+              <div class="d-flex">
+                <span>Nro Jubilacion</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nroLaboratorio">
+              <div class="d-flex">
+                <span>Nro Laboratorio</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col">
+              <div class="d-flex">
+                <span>Nombre Completo</span>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="genero">
+              <div class="d-flex">
+                <span>Genero</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="user.login">
+              <div class="d-flex">
+                <span>User</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (bioquimico of bioquimicos(); track trackId(bioquimico)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/bioquimico', bioquimico.id, 'view']">{{ bioquimico.id }}</a>
+              </td>
+              <td>{{ bioquimico.matricula }}</td>
+              <td>{{ bioquimico.cuit }}</td>
+              <td>
+                {{ { null: '', RESP_NO_INSCRIPTO: 'RESP_NO_INSCRIPTO', RESP_INSCRIPTO: 'RESP_INSCRIPTO' }[bioquimico.tipoIva ?? 'null'] }}
+              </td>
+              <td>{{ bioquimico.domicilioProfesional }}</td>
+              <td>
+                {{ { null: '', SOCIO_ACTIVO: 'SOCIO_ACTIVO', NO_CARGA: 'NO_CARGA', INACTIVO: 'INACTIVO' }[bioquimico.estado ?? 'null'] }}
+              </td>
+              <td>{{ bioquimico.email }}</td>
+              <td>{{ bioquimico.fechaIngreso | formatMediumDate }}</td>
+              <td>{{ bioquimico.telefono }}</td>
+              <td>{{ bioquimico.nombreEnDosep }}</td>
+              <td>{{ bioquimico.nroPrestadorOsde }}</td>
+              <td>{{ bioquimico.ingBrutos }}</td>
+              <td>{{ bioquimico.nroJubilacion }}</td>
+              <td>{{ bioquimico.nroLaboratorio }}</td>
+              <td>{{ bioquimico.nombreCompleto }}</td>
+              <td>{{ { null: '', HOMBRE: 'H', MUJER: 'M' }[bioquimico.genero ?? 'null'] }}</td>
+              <td>
+                {{ bioquimico.user?.login }}
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/bioquimico', bioquimico.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline">Vista</span>
+                  </a>
+
+                  <a [routerLink]="['/bioquimico', bioquimico.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline">Editar</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(bioquimico)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline">Eliminar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (bioquimicos().length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems()"
+          [page]="page()"
+          [pageSize]="itemsPerPage()"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        />
+      </div>
+    </div>
+  }
+</div>

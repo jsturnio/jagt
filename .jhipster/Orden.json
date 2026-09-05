@@ -1,0 +1,81 @@
+{
+  "annotations": {
+    "changelogDate": "20231211001023",
+    "genMasterDetail": "Practica"
+  },
+  "applications": ["jag"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "afiliado",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "protocolo",
+      "fieldType": "Long"
+    },
+    {
+      "fieldName": "fechaOrden",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "fechaPrescripcion",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "totalOrden",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "sumaUb",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "fieldName": "fechaCreacion",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "Orden",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "documentation": "@showCount",
+      "options": {
+        "onDelete": "CASCADE"
+      },
+      "otherEntityName": "practica",
+      "otherEntityRelationshipName": "orden",
+      "relationshipName": "practicas",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityField": "paqDescrip",
+      "otherEntityName": "paquete",
+      "otherEntityRelationshipName": "ordenes",
+      "relationshipName": "paquete",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityName": "empleado",
+      "otherEntityRelationshipName": "orden",
+      "relationshipName": "usuario",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    },
+    {
+      "otherEntityField": "nombreCompleto",
+      "otherEntityName": "bioquimico",
+      "otherEntityRelationshipName": "ordenes",
+      "relationshipName": "bioquimico",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

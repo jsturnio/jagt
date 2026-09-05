@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (prestacion(); as prestacionRef) {
+      <div>
+        <h2 data-cy="prestacionDetailsHeading"><span>Prestacion</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ prestacionRef.id }}</span>
+          </dd>
+          <dt><span ngbTooltip="Codigo: Codigo Base NBU">Codigo</span></dt>
+          <dd>
+            <span>{{ prestacionRef.codigo }}</span>
+          </dd>
+          <dt><span>Codigo Inos</span></dt>
+          <dd>
+            <span>{{ prestacionRef.codigoInos }}</span>
+          </dd>
+          <dt><span>Valor Ub</span></dt>
+          <dd>
+            <span>{{ prestacionRef.valorUb }}</span>
+          </dd>
+          <dt><span ngbTooltip="Indica que la Practica requiere autorizacion por la Obra Social">Req Autorizacion</span></dt>
+          <dd>
+            <span>{{ prestacionRef.reqAutorizacion }}</span>
+          </dd>
+          <dt><span>Nomenclador</span></dt>
+          <dd>
+            @if (prestacion()!.nomenclador) {
+              <div>
+                <a [routerLink]="['/nomenclador', prestacion()!.nomenclador?.id, 'view']">{{ prestacionRef.nomenclador?.nombre }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/prestacion', prestacionRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

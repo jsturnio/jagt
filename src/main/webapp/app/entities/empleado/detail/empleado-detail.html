@@ -1,0 +1,72 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (empleado(); as empleadoRef) {
+      <div>
+        <h2 data-cy="empleadoDetailsHeading"><span>Empleado</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ empleadoRef.id }}</span>
+          </dd>
+          <dt><span>Nombre</span></dt>
+          <dd>
+            <span>{{ empleadoRef.nombre }}</span>
+          </dd>
+          <dt><span>Apellido</span></dt>
+          <dd>
+            <span>{{ empleadoRef.apellido }}</span>
+          </dd>
+          <dt><span>Cuit</span></dt>
+          <dd>
+            <span>{{ empleadoRef.cuit }}</span>
+          </dd>
+          <dt><span>Tipo Iva</span></dt>
+          <dd>
+            <span>{{
+              { null: '', RESP_NO_INSCRIPTO: 'RESP_NO_INSCRIPTO', RESP_INSCRIPTO: 'RESP_INSCRIPTO' }[empleadoRef.tipoIva ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span>Domicilio</span></dt>
+          <dd>
+            <span>{{ empleadoRef.domicilio }}</span>
+          </dd>
+          <dt><span>Email</span></dt>
+          <dd>
+            <span>{{ empleadoRef.email }}</span>
+          </dd>
+          <dt><span>Fecha Ingreso</span></dt>
+          <dd>
+            <span>{{ empleadoRef.fechaIngreso | formatMediumDate }}</span>
+          </dd>
+          <dt><span>Telefono</span></dt>
+          <dd>
+            <span>{{ empleadoRef.telefono }}</span>
+          </dd>
+          <dt><span>Genero</span></dt>
+          <dd>
+            <span>{{ { null: '', HOMBRE: 'H', MUJER: 'M' }[empleadoRef.genero ?? 'null'] }}</span>
+          </dd>
+          <dt><span>Usuario</span></dt>
+          <dd>
+            <span>{{ empleadoRef.usuario?.login }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/empleado', empleadoRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

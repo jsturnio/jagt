@@ -1,0 +1,44 @@
+{
+  "annotations": {
+    "changelogDate": "20231211000323"
+  },
+  "applications": ["jag"],
+  "documentation": "Product sold by the Online store",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "documentation": "Codigo: Codigo Base NBU",
+      "fieldName": "codigo",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "codigoInos",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "valorUb",
+      "fieldType": "BigDecimal"
+    },
+    {
+      "documentation": "Indica que la Practica requiere autorizacion por la Obra Social",
+      "fieldName": "reqAutorizacion",
+      "fieldType": "Boolean"
+    }
+  ],
+  "name": "Prestacion",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityField": "nombre",
+      "otherEntityName": "nomenclador",
+      "otherEntityRelationshipName": "prestacion",
+      "relationshipName": "nomenclador",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

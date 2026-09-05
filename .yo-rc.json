@@ -1,0 +1,19 @@
+{
+  "generator-jhipster": {
+    "authenticationType": "jwt",
+    "baseName": "jag",
+    "buildTool": "maven",
+    "clientFramework": "angular",
+    "creationTimestamp": 1702252943173,
+    "enableTranslation": false,
+    "entities": ["Prestacion", "Mutual", "PlanMutual", "Paquete", "Nomenclador", "Empleado", "Bioquimico", "Orden", "Practica"],
+    "jhipsterVersion": "9.3.0",
+    "jwtSecretKey": "YTQ2YTUyOTYzNzFkZjFhOTY5NjhkNTY2YzEyZGE5NmMyMTAxM2FmZGM2OGI1NDBkYTFhNTIxOTRmMzg0MWZhZjA4Y2U3ODI5ZDNhZTJlYmEwYzM0YTE5N2NmZDc5NDZiNTE5NjY3MDQyMTkyMzI2MzkyMjZkZWYwZjQzYzFkZmY=",
+    "languages": ["es"],
+    "lastLiquibaseTimestamp": 1702253483000,
+    "nativeLanguage": "es",
+    "packageName": "absl",
+    "prodDatabaseType": "postgresql"
+  },
+  "generator-jhipster-ag-grid": {}
+}

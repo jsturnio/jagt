@@ -1,0 +1,115 @@
+<div>
+  <h2 id="page-heading" data-cy="PracticaHeading">
+    <span>Practicas</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span>Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-practica"
+        [routerLink]="['/practica/new']"
+      >
+        <fa-icon icon="plus" />
+        <span>Crear nuevo Practica</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (practicas().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span>Ningún Practicas encontrado</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span>ID</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="cantidad">
+              <div class="d-flex">
+                <span>Cantidad</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="pvalor">
+              <div class="d-flex">
+                <span>Pvalor</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="prestacion.codigo">
+              <div class="d-flex">
+                <span>Prestacion</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="orden.id">
+              <div class="d-flex">
+                <span>Orden</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (practica of practicas(); track trackId(practica)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/practica', practica.id, 'view']">{{ practica.id }}</a>
+              </td>
+              <td>{{ practica.cantidad }}</td>
+              <td>{{ practica.pvalor }}</td>
+              <td>
+                @if (practica.prestacion) {
+                  <div>
+                    <a [routerLink]="['/prestacion', practica.prestacion.id, 'view']">{{ practica.prestacion.codigo }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (practica.orden) {
+                  <div>
+                    <a [routerLink]="['/orden', practica.orden.id, 'view']">{{ practica.orden.id }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/practica', practica.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline">Vista</span>
+                  </a>
+
+                  <a [routerLink]="['/practica', practica.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline">Editar</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(practica)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline">Eliminar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

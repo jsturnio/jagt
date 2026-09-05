@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (planMutual(); as planMutualRef) {
+      <div>
+        <h2 data-cy="planMutualDetailsHeading"><span>Plan Mutual</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ planMutualRef.id }}</span>
+          </dd>
+          <dt><span>Categoria</span></dt>
+          <dd>
+            <span>{{ planMutualRef.categoria }}</span>
+          </dd>
+          <dt><span>Etiqueta Reporte</span></dt>
+          <dd>
+            <span>{{ planMutualRef.etiquetaReporte }}</span>
+          </dd>
+          <dt><span>Prestaciones Importadas</span></dt>
+          <dd>
+            <span>{{ planMutualRef.prestacionesImportadas }}</span>
+          </dd>
+          <dt><span>Mutual</span></dt>
+          <dd>
+            @if (planMutual()!.mutual) {
+              <div>
+                <a [routerLink]="['/mutual', planMutual()!.mutual?.id, 'view']">{{ planMutualRef.mutual?.nombre }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/plan-mutual', planMutualRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

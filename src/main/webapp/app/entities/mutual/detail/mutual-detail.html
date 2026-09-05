@@ -1,0 +1,64 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (mutual(); as mutualRef) {
+      <div>
+        <h2 data-cy="mutualDetailsHeading"><span>Mutual</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ mutualRef.id }}</span>
+          </dd>
+          <dt><span>Nombre</span></dt>
+          <dd>
+            <span>{{ mutualRef.nombre }}</span>
+          </dd>
+          <dt><span>Descripcion</span></dt>
+          <dd>
+            <span>{{ mutualRef.descripcion }}</span>
+          </dd>
+          <dt><span>Cuit</span></dt>
+          <dd>
+            <span>{{ mutualRef.cuit }}</span>
+          </dd>
+          <dt><span>Tipo Iva</span></dt>
+          <dd>
+            <span>{{
+              { null: '', RESP_NO_INSCRIPTO: 'RESP_NO_INSCRIPTO', RESP_INSCRIPTO: 'RESP_INSCRIPTO' }[mutualRef.tipoIva ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span>Domicilio</span></dt>
+          <dd>
+            <span>{{ mutualRef.domicilio }}</span>
+          </dd>
+          <dt><span>Telefono</span></dt>
+          <dd>
+            <span>{{ mutualRef.telefono }}</span>
+          </dd>
+          <dt><span>Email</span></dt>
+          <dd>
+            <span>{{ mutualRef.email }}</span>
+          </dd>
+          <dt><span>Habilitada</span></dt>
+          <dd>
+            <span>{{ mutualRef.habilitada }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/mutual', mutualRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

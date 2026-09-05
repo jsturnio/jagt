@@ -1,0 +1,64 @@
+{
+  "annotations": {
+    "changelogDate": "20231211000623"
+  },
+  "applications": ["jag"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "paqDescrip",
+      "fieldType": "String",
+      "options": {
+        "dtoDisplay": "'(' + getId() + ') ' + getPeriodo() + '-' + getNombre()",
+        "transient": true
+      }
+    },
+    {
+      "fieldName": "nombre",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "periodo",
+      "fieldType": "LocalDate",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "estado",
+      "fieldType": "EstadoPaquete",
+      "fieldValues": "EN_CARGA,FP_GENERADO,FACTURADO,PAGO_MUTUAL,LIQUIDADA_A_SOCIOS,ARCHIVADO"
+    },
+    {
+      "fieldName": "descripcion",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "60"
+    },
+    {
+      "fieldName": "tipoIva",
+      "fieldType": "TipoIva",
+      "fieldValues": "RESP_NO_INSCRIPTO,RESP_INSCRIPTO"
+    }
+  ],
+  "name": "Paquete",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "orden",
+      "otherEntityRelationshipName": "paquete",
+      "relationshipName": "ordenes",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityField": "categoria",
+      "otherEntityName": "planMutual",
+      "otherEntityRelationshipName": "paquete",
+      "relationshipName": "plan",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": "required"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

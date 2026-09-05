@@ -1,0 +1,101 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-practica-heading" data-cy="PracticaCreateUpdateHeading">Crear o editar Practica</h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let cantidadRef = editForm.get('cantidad')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_cantidad">Cantidad</label>
+          <input type="number" class="form-control" name="cantidad" id="field_cantidad" data-cy="cantidad" formControlName="cantidad" />
+          @if (cantidadRef.invalid && (cantidadRef.dirty || cantidadRef.touched)) {
+            <div>
+              @if (cantidadRef.errors?.required) {
+                <small class="form-text text-danger">Este campo es obligatorio.</small>
+              }
+              @if (cantidadRef.errors?.min) {
+                <small class="form-text text-danger">Este campo debe ser mayor que 1.</small>
+              }
+              <small class="form-text text-danger" [hidden]="!cantidadRef.errors?.number">Este campo debe ser un número.</small>
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_pvalor">Pvalor</label>
+          <input type="number" class="form-control" name="pvalor" id="field_pvalor" data-cy="pvalor" formControlName="pvalor" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_prestacion">Prestacion</label>
+          <select
+            class="form-control"
+            id="field_prestacion"
+            data-cy="prestacion"
+            name="prestacion"
+            formControlName="prestacion"
+            [compareWith]="comparePrestacion"
+          >
+            @if (!editForm.get('prestacion')!.value) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (prestacionOption of prestacionsSharedCollection(); track $index) {
+              <option [ngValue]="prestacionOption">{{ prestacionOption.codigo }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['prestacion'])!.invalid && (editForm.get(['prestacion'])!.dirty || editForm.get(['prestacion'])!.touched)) {
+          <div>
+            @if (editForm.get(['prestacion'])?.errors?.required) {
+              <small class="form-text text-danger">Este campo es obligatorio.</small>
+            }
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_orden">Orden</label>
+          <select class="form-control" id="field_orden" data-cy="orden" name="orden" formControlName="orden" [compareWith]="compareOrden">
+            @if (editForm.get(['orden'])!.value === null) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (ordenOption of ordensSharedCollection(); track $index) {
+              <option [ngValue]="ordenOption">{{ ordenOption.id }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['orden'])!.invalid && (editForm.get(['orden'])!.dirty || editForm.get(['orden'])!.touched)) {
+          <div>
+            @if (editForm.get(['orden'])?.errors?.required) {
+              <small class="form-text text-danger">Este campo es obligatorio.</small>
+            }
+          </div>
+        }
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span>Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span>Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

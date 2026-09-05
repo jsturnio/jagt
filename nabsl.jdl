@@ -1,0 +1,218 @@
+DEFAULT_MAX_LENGTH_SHORT = 7
+DEFAULT_MAX_LENGTH_LARGE = 60
+
+paginate Prestacion, Bioquimico, Nomenclador, Orden, Mutual, PlanMutual, Paquete with pagination
+
+application {
+  config {
+    baseName jag
+    packageName absl
+    authenticationType jwt
+    prodDatabaseType postgresql
+    buildTool maven
+    clientFramework angular
+    enableTranslation false
+    nativeLanguage es
+    languages [es]
+  }
+  entities *
+  service Orden, Paquete, Prestacion, Practica, Bioquimico with serviceClass
+  dto * with mapstruct
+
+}
+
+
+/** Product sold by the Online store */
+entity Prestacion {
+    /** Codigo: Codigo Base NBU */
+    codigo      Integer     required unique
+    codigoInos  String
+    valorUb     BigDecimal
+    /* Falta PrestacionBase */
+
+    /** Indica que la Practica requiere autorizacion por la Obra Social */
+    reqAutorizacion Boolean
+}
+
+enum TipoIva {
+    RESP_NO_INSCRIPTO, RESP_INSCRIPTO
+}
+
+entity Mutual {
+    nombre      String  required    maxlength(DEFAULT_MAX_LENGTH_SHORT)
+    descripcion String  maxlength(100)
+    cuit        String  maxlength(20)
+    tipoIva     TipoIva required
+    domicilio   String  maxlength(50)
+    telefono    String  pattern(/^(\d{3}[- .]?){2}\\d{4}$/)
+    email       String  pattern(/^(.+)@(\\S+)$/)
+    habilitada  Boolean /* default: true */
+
+    /* Falta: ValorNbuFecha, Paciente?, PlanMutual,
+    AtributosMutual, CamposRequeridos, AfiliadoMutual, ConceptoFinanciero
+    */
+}
+
+entity PlanMutual {
+    categoria       String  required    maxlength(DEFAULT_MAX_LENGTH_SHORT)
+    etiquetaReporte String  required    maxlength(DEFAULT_MAX_LENGTH_SHORT)
+    /* Indica que son prestaciones que se ingresan con un proceso de importacion, imlica que no se valoran */
+    prestacionesImportadas  Boolean
+}
+
+enum EstadoPaquete {
+    EN_CARGA,FP_GENERADO, FACTURADO, PAGO_MUTUAL, LIQUIDADA_A_SOCIOS, ARCHIVADO
+}
+
+/* Existe Paquete de Mutual y Paquete de Bioquimico */
+entity  Paquete {
+    /* Nombre autogenerado: Date+mutual-nombre+ categoriaPlan+IVA */
+    
+    @transient
+    @dtoDisplay("'(' + getId() + ') ' + getPeriodo() + '-' + getNombre()")
+    paqDescrip      String
+
+    nombre          String
+    periodo         LocalDate   required
+    estado          EstadoPaquete
+    descripcion     String  maxlength(DEFAULT_MAX_LENGTH_LARGE)
+    tipoIva         TipoIva
+}
+
+enum TipoNomenclador {
+    NBU, INOS
+}
+
+entity Nomenclador {
+    nombre      String  required    maxlength(12)
+    descripcion String  maxlength(100)
+    tipo        TipoNomenclador required
+}
+
+entity Empleado {
+    nombre          String
+    apellido        String
+    cuit            String
+    tipoIva         TipoIva required
+    domicilio       String
+    email           String  required    pattern(/^(.+)@(\S+)$/)
+    fechaIngreso    LocalDate
+    telefono        String  pattern(/^(\d{3}[- .]?){2}\d{3}$/)
+    genero          Gender  required
+}
+
+enum EstadoSocio {
+    SOCIO_ACTIVO,NO_CARGA,INACTIVO
+}
+
+entity Bioquimico {
+    matricula       Long
+    cuit            String
+    tipoIva         TipoIva     required
+    domicilioProfesional    String
+    estado          EstadoSocio
+    email           String      required    pattern(/^(.+)@(\S+)$/)
+    fechaIngreso    LocalDate
+    telefono        String  pattern(/^(\d{3}[- .]?){2}\d{3}$/)
+    nombreEnDosep   String
+    nroPrestadorOsde    Integer
+
+    ingBrutos       String      maxlength(20)
+    nroJubilacion   String
+    nroLaboratorio  String
+
+    @transient
+    @dtoDisplay("user.getLastName() + ', ' + user.getFirstName() + ' (' + getId() + ')'")
+    nombreCompleto  String
+
+    genero          Gender required
+}
+
+enum Gender {
+    HOMBRE(H), MUJER(M)
+}
+
+// @skipCache
+@GenMasterDetail(Practica)
+entity Orden {
+
+ /* Definidos por CamposRequeridos */
+    afiliado    Long
+    protocolo   Long
+    fechaOrden  LocalDate
+    fechaPrescripcion   LocalDate
+
+
+    /* Campo que no se debe requerir, campo calculado */
+    totalOrden  BigDecimal
+    sumaUb      BigDecimal
+
+    fechaCreacion Instant
+
+
+    /*
+    status OrderStatus required
+    totalPrice BigDecimal required min(0)
+    paymentMethod PaymentMethod required
+    paymentReference String
+    */
+}
+/*
+enum OrderStatus {
+    COMPLETED, PAID, PENDING, CANCELLED, REFUNDED
+}
+*/
+
+// @skipCache
+entity Practica {
+    cantidad    Integer     required min(1)
+    pvalor      BigDecimal
+    /*
+       static hasMany = [ajustes: Ajuste]
+       */
+}
+
+/**  RELATIONS **/
+
+/*
+    Entity {name of relationship (NOR)} to Entity {NOR}
+    La entity que tenga NOR es la que maneja la direccion de la relacion
+    relationship OneToMany {
+         Person{ownedCar} to Car{owner}
+    }
+
+    relationship OneToMany {
+        Person{drivenCar} to Car{driver}
+    }
+    si se usa () ahi va el display field, por defecto va el ID
+relationship OneToOne {
+    Bioquimico{user(login) required} to User with builtInEntity
+    Empleado{usuario(login) required} to User with builtInEntity
+}
+*/
+
+relationship OneToOne {
+    Bioquimico{user(login) required} to User with builtInEntity
+    Empleado{usuario(login) required} to User with builtInEntity
+}
+
+
+relationship ManyToOne {
+    Practica{prestacion(codigo) required} to Prestacion
+}
+
+relationship OneToMany {
+    Paquete{ordenes} to Orden{paquete(paqDescrip) required} 
+    /* Usuario es de asignacion automatica en Orden */
+    Empleado{orden} to Orden{usuario required}
+    Bioquimico{ordenes} to Orden{bioquimico(nombreCompleto) required}
+    /** @showCount */
+    Orden{practicas} to @OnDelete("CASCADE") Practica{orden required}
+    /* En Prestacion muestra un combo para elegir Nomenclador */
+    Nomenclador{prestacion(codigo)} to Prestacion{nomenclador(nombre) required}
+    Mutual{nomenclador(nombre)} to Nomenclador{mutual(nombre) required}
+    Mutual{plan(categoria)} to PlanMutual{mutual(nombre) required}
+    PlanMutual{paquete(nombre)} to Paquete{plan(categoria) required}
+}
+
+// service * with serviceClass

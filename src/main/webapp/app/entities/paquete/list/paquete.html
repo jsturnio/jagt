@@ -1,0 +1,162 @@
+<div>
+  <h2 id="page-heading" data-cy="PaqueteHeading">
+    <span>Paquetes</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span>Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-paquete"
+        [routerLink]="['/paquete/new']"
+      >
+        <fa-icon icon="plus" />
+        <span>Crear nuevo Paquete</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (paquetes().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span>Ningún Paquetes encontrado</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span>ID</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col">
+              <div class="d-flex">
+                <span>Paq Descrip</span>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nombre">
+              <div class="d-flex">
+                <span>Nombre</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="periodo">
+              <div class="d-flex">
+                <span>Periodo</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="estado">
+              <div class="d-flex">
+                <span>Estado</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="descripcion">
+              <div class="d-flex">
+                <span>Descripcion</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="tipoIva">
+              <div class="d-flex">
+                <span>Tipo Iva</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="plan.categoria">
+              <div class="d-flex">
+                <span>Plan</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (paquete of paquetes(); track trackId(paquete)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/paquete', paquete.id, 'view']">{{ paquete.id }}</a>
+              </td>
+              <td>{{ paquete.paqDescrip }}</td>
+              <td>{{ paquete.nombre }}</td>
+              <td>{{ paquete.periodo | formatMediumDate }}</td>
+              <td>
+                {{
+                  {
+                    null: '',
+                    EN_CARGA: 'EN_CARGA',
+                    FP_GENERADO: 'FP_GENERADO',
+                    FACTURADO: 'FACTURADO',
+                    PAGO_MUTUAL: 'PAGO_MUTUAL',
+                    LIQUIDADA_A_SOCIOS: 'LIQUIDADA_A_SOCIOS',
+                    ARCHIVADO: 'ARCHIVADO',
+                  }[paquete.estado ?? 'null']
+                }}
+              </td>
+              <td>{{ paquete.descripcion }}</td>
+              <td>
+                {{ { null: '', RESP_NO_INSCRIPTO: 'RESP_NO_INSCRIPTO', RESP_INSCRIPTO: 'RESP_INSCRIPTO' }[paquete.tipoIva ?? 'null'] }}
+              </td>
+              <td>
+                @if (paquete.plan) {
+                  <div>
+                    <a [routerLink]="['/plan-mutual', paquete.plan.id, 'view']">{{ paquete.plan.categoria }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/paquete', paquete.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline">Vista</span>
+                  </a>
+
+                  <a [routerLink]="['/paquete', paquete.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline">Editar</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(paquete)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline">Eliminar</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (paquetes().length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems()"
+          [page]="page()"
+          [pageSize]="itemsPerPage()"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        />
+      </div>
+    </div>
+  }
+</div>

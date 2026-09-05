@@ -1,0 +1,74 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (paquete(); as paqueteRef) {
+      <div>
+        <h2 data-cy="paqueteDetailsHeading"><span>Paquete</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span>ID</span></dt>
+          <dd>
+            <span>{{ paqueteRef.id }}</span>
+          </dd>
+          <dt><span>Paq Descrip</span></dt>
+          <dd>
+            <span>{{ paqueteRef.paqDescrip }}</span>
+          </dd>
+          <dt><span>Nombre</span></dt>
+          <dd>
+            <span>{{ paqueteRef.nombre }}</span>
+          </dd>
+          <dt><span>Periodo</span></dt>
+          <dd>
+            <span>{{ paqueteRef.periodo | formatMediumDate }}</span>
+          </dd>
+          <dt><span>Estado</span></dt>
+          <dd>
+            <span>{{
+              {
+                null: '',
+                EN_CARGA: 'EN_CARGA',
+                FP_GENERADO: 'FP_GENERADO',
+                FACTURADO: 'FACTURADO',
+                PAGO_MUTUAL: 'PAGO_MUTUAL',
+                LIQUIDADA_A_SOCIOS: 'LIQUIDADA_A_SOCIOS',
+                ARCHIVADO: 'ARCHIVADO',
+              }[paqueteRef.estado ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span>Descripcion</span></dt>
+          <dd>
+            <span>{{ paqueteRef.descripcion }}</span>
+          </dd>
+          <dt><span>Tipo Iva</span></dt>
+          <dd>
+            <span>{{
+              { null: '', RESP_NO_INSCRIPTO: 'RESP_NO_INSCRIPTO', RESP_INSCRIPTO: 'RESP_INSCRIPTO' }[paqueteRef.tipoIva ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span>Plan</span></dt>
+          <dd>
+            @if (paquete()!.plan) {
+              <div>
+                <a [routerLink]="['/plan-mutual', paquete()!.plan?.id, 'view']">{{ paqueteRef.plan?.categoria }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span>Volver</span>
+        </button>
+
+        <button type="button" [routerLink]="['/paquete', paqueteRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span>Editar</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

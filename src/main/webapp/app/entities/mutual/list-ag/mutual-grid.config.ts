@@ -1,0 +1,108 @@
+import { ColDef } from 'ag-grid-community';
+
+/**
+ * Genera la definición de columnas para la grilla AG Grid de Mutual
+ */
+export function getMutualColumnDefs(actionsCellRenderer: any): ColDef[] {
+  return [
+    {
+      field: 'id',
+      headerName: 'Id',
+      sortable: true,
+      resizable: true,
+      editable: true,
+      width: 90,
+      maxWidth: 110,
+      pinned: 'left',
+      filter: true,
+    },
+    {
+      field: 'nombre',
+      headerName: 'Nombre',
+      sortable: true,
+      resizable: true,
+      editable: true,
+      flex: 1,
+      minWidth: 150,
+      filter: true,
+    },
+    {
+      field: 'descripcion',
+      headerName: 'Descripcion',
+      sortable: true,
+      resizable: true,
+      editable: true,
+      flex: 1,
+      minWidth: 150,
+      filter: true,
+    },
+    {
+      field: 'cuit',
+      headerName: 'Cuit',
+      sortable: true,
+      resizable: true,
+      editable: true,
+      flex: 1,
+      minWidth: 150,
+      filter: true,
+    },
+    {
+      field: 'tipoIva',
+      headerName: 'TipoIva',
+      sortable: true,
+      resizable: true,
+      editable: true,
+      flex: 1,
+      minWidth: 150,
+      filter: true,
+    },
+    {
+      field: 'domicilio',
+      headerName: 'Domicilio',
+      sortable: true,
+      resizable: true,
+      editable: true,
+      flex: 1,
+      minWidth: 150,
+      filter: true,
+    },
+    {
+      field: 'telefono',
+      headerName: 'Telefono',
+      sortable: true,
+      resizable: true,
+      editable: true,
+      flex: 1,
+      minWidth: 150,
+      filter: true,
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+      sortable: true,
+      resizable: true,
+      editable: true,
+      flex: 1,
+      minWidth: 150,
+      filter: true,
+    },
+    {
+      field: 'habilitada',
+      headerName: 'Habilitada',
+      sortable: true,
+      resizable: true,
+      editable: true,
+      width: 110,
+      filter: true,
+    },
+
+    {
+      headerName: 'Acciones',
+      pinned: 'right',
+      width: 130,
+      sortable: false,
+      filter: false,
+      cellRenderer: actionsCellRenderer,
+    },
+  ];
+}
