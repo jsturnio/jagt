@@ -48,6 +48,7 @@ export class OrdenAg implements OnInit, OnDestroy {
     filter: true,
     resizable: true,
     editable: true,
+    floatingFilter: true,
   };
 
   onCellValueChanged(event: CellValueChangedEvent): void {
@@ -55,6 +56,17 @@ export class OrdenAg implements OnInit, OnDestroy {
     this.ordenService.update(orden).subscribe(() => {
       this.load();
     });
+  }
+
+  showFloatingFilters = true;
+
+  toggleFloatingFilters() {
+    this.showFloatingFilters = !this.showFloatingFilters;
+
+    this.columnDefs = this.columnDefs.map(col => ({
+      ...col,
+      floatingFilter: this.showFloatingFilters,
+    }));
   }
 
   onFilterChanged(event: any): void {
