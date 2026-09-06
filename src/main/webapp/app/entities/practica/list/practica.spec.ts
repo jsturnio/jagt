@@ -37,6 +37,7 @@ describe('Practica Management Component', () => {
                 page: '1',
                 size: '1',
                 sort: 'id,desc',
+                'filter[someId.in]': 'dc4279ea-cfb9-11ec-9d64-0242ac120002',
               }),
             ),
             snapshot: {
@@ -45,6 +46,7 @@ describe('Practica Management Component', () => {
                 page: '1',
                 size: '1',
                 sort: 'id,desc',
+                'filter[someId.in]': 'dc4279ea-cfb9-11ec-9d64-0242ac120002',
               }),
             },
           },
@@ -79,6 +81,47 @@ describe('Practica Management Component', () => {
     expect(comp.practicas()[0]).toEqual(expect.objectContaining({ id: 7449 }));
   });
 
+  it('should cancel previous requests when loading a new page', async () => {
+    // WHEN
+    TestBed.tick();
+    const req = httpMock.expectOne({ method: 'GET' });
+    await vi.runAllTimersAsync();
+
+    comp.page.set(3);
+    comp.load();
+    await vi.runAllTimersAsync();
+    const req2 = httpMock.expectOne({ method: 'GET' });
+    req2.flush([{ id: 7449 }], { headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' } });
+    await vi.runAllTimersAsync();
+
+    // THEN
+    expect(req.cancelled).toBeTruthy();
+    expect(comp.isLoading()).toEqual(false);
+    expect(comp.practicas()[0]).toEqual(expect.objectContaining({ id: 7449 }));
+  });
+
+  it('should not fail on resource error state', async () => {
+    // GIVEN - first load triggers an HTTP error
+    TestBed.tick();
+    const errorReq = httpMock.expectOne({ method: 'GET' });
+    errorReq.flush('error', { status: 500, statusText: 'Server Error' });
+    await vi.runAllTimersAsync();
+
+    // THEN - loading state was reset and list is empty
+    expect(comp.isLoading()).toBe(false);
+    expect(comp.practicas()).toEqual([]);
+
+    // WHEN - second load should still work
+    comp.load();
+    TestBed.tick();
+    const successReq = httpMock.expectOne({ method: 'GET' });
+    successReq.flush([{ id: 7449 }], { headers: { link: '<http://localhost/api/foo?page=1&size=20>; rel="next"' } });
+    await vi.runAllTimersAsync();
+
+    // THEN - subscription is still alive and second load succeeds
+    expect(comp.practicas()[0]).toEqual(expect.objectContaining({ id: 7449 }));
+  });
+
   describe('trackId', () => {
     it('should forward to practicaService', () => {
       const entity = { id: 7449 };
@@ -104,6 +147,14 @@ describe('Practica Management Component', () => {
     );
   });
 
+  it('should load a page', () => {
+    // WHEN
+    comp.navigateToPage(1);
+
+    // THEN
+    expect(routerNavigateSpy).toHaveBeenCalled();
+  });
+
   it('should calculate the sort attribute for an id', () => {
     // WHEN
     TestBed.tick();
@@ -111,6 +162,15 @@ describe('Practica Management Component', () => {
 
     // THEN
     expect(service.practicasParams()).toMatchObject({ sort: ['id,desc'] });
+  });
+
+  it('should calculate the filter attribute', () => {
+    // WHEN
+    TestBed.tick();
+    httpMock.expectOne({ method: 'GET' });
+
+    // THEN
+    expect(service.practicasParams()).toMatchObject({ 'someId.in': ['dc4279ea-cfb9-11ec-9d64-0242ac120002'] });
   });
 
   describe('delete', () => {

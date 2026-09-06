@@ -16,7 +16,9 @@
       "fieldType": "BigDecimal"
     }
   ],
+  "jpaMetamodelFiltering": true,
   "name": "Practica",
+  "pagination": "pagination",
   "relationships": [
     {
       "otherEntityField": "codigo",

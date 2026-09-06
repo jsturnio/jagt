@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
  * Spring Data JPA repository for the Practica entity.
  */
 @Repository
-public interface PracticaRepository extends JpaRepository<Practica, Long> {
+public interface PracticaRepository extends JpaRepository<Practica, Long>, JpaSpecificationExecutor<Practica> {
     default Optional<Practica> findOneWithEagerRelationships(Long id) {
         return this.findOneWithToOneRelationships(id);
     }

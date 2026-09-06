@@ -1,7 +1,8 @@
 DEFAULT_MAX_LENGTH_SHORT = 7
 DEFAULT_MAX_LENGTH_LARGE = 60
 
-paginate Prestacion, Bioquimico, Nomenclador, Orden, Mutual, PlanMutual, Paquete with pagination
+paginate Prestacion, Bioquimico, Nomenclador, Orden, Practica, Mutual, PlanMutual, Paquete with pagination
+filter Practica
 
 application {
   config {

@@ -49,17 +49,13 @@
   </div>
 
   @if (ordens().length > 0) {
-    <div class="ag-theme-balham-footer d-flex justify-content-center align-items-center gap-5">
-      <ngb-pagination
-        [collectionSize]="totalItems()"
+    <div class="ag-theme-balham">
+      <jhi-ag-grid-pagination
         [page]="page()"
         [pageSize]="itemsPerPage()"
-        [maxSize]="5"
-        [rotate]="true"
-        [boundaryLinks]="true"
+        [totalItems]="totalItems()"
         (pageChange)="navigateToPage($event)"
       />
-      <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
     </div>
   }
 </div>

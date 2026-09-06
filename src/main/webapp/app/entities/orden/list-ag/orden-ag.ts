@@ -6,7 +6,6 @@ import { ActivatedRoute, Data, ParamMap, Router, RouterLink } from '@angular/rou
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
-import { NgbPagination } from '@ng-bootstrap/ng-bootstrap/pagination';
 import { AgGridAngular } from 'ag-grid-angular';
 import { AllCommunityModule, type CellValueChangedEvent, ColDef, ModuleRegistry, themeBalham } from 'ag-grid-community';
 import { Subscription, combineLatest, filter, tap } from 'rxjs';
@@ -14,15 +13,12 @@ import { Subscription, combineLatest, filter, tap } from 'rxjs';
 import { DEFAULT_SORT_DATA, ITEM_DELETED_EVENT, SORT } from 'app/config/navigation.constants';
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { AG_GRID_LOCALE_ES } from 'app/shared/ag-grid/ag-grid-locale';
+import { AgGridPaginationComponent } from 'app/shared/ag-grid/ag-grid-pagination/ag-grid-pagination.component';
 import { buildGridFilterParams } from 'app/shared/ag-grid/ag-grid-utils';
 import { Alert } from 'app/shared/alert/alert';
 import { AlertError } from 'app/shared/alert/alert-error';
-//import { FormatMediumDatePipe, FormatMediumDatetimePipe } from 'app/shared/date';
 import { Filter, FilterOptions, IFilterOption, IFilterOptions } from 'app/shared/filter';
-import { ItemCount } from 'app/shared/pagination';
 import { SortService, type SortState, sortStateSignal } from 'app/shared/sort';
-//import { SortByDirective, SortDirective, SortService, type SortState, sortStateSignal } from 'app/shared/sort';
-
 import { OrdenDeleteDialog } from '../delete/orden-delete-dialog';
 import { IOrden } from '../orden.model';
 import { OrdenService } from '../service/orden.service';
@@ -34,21 +30,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
   selector: 'jhi-orden-ag',
   templateUrl: './orden-ag.html',
-  imports: [
-    RouterLink,
-    FormsModule,
-    FontAwesomeModule,
-    AlertError,
-    Alert,
-    //    SortDirective,
-    //    SortByDirective,
-    //    FormatMediumDatetimePipe,
-    //    FormatMediumDatePipe,
-    Filter,
-    NgbPagination,
-    ItemCount,
-    AgGridAngular,
-  ],
+  imports: [RouterLink, FormsModule, FontAwesomeModule, AlertError, Alert, Filter, AgGridPaginationComponent, AgGridAngular],
 })
 export class OrdenAg implements OnInit, OnDestroy {
   public tema = themeBalham;

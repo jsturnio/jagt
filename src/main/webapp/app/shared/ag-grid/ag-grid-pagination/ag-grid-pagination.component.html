@@ -1,0 +1,40 @@
+<div class="ag-paging-panel" role="navigation" aria-label="Paginación">
+  <span class="ag-paging-row-summary-panel">
+    <span>{{ firstItem }}</span>
+    <span>-</span>
+    <span>{{ lastItem }}</span>
+    <span>de</span>
+    <span>{{ totalItems() }}</span>
+  </span>
+
+  <span class="ag-paging-page-summary-panel">
+    <button type="button" class="ag-paging-button" [disabled]="page() <= 1" (click)="firstPage()" aria-label="Primera página">‹‹</button>
+
+    <button type="button" class="ag-paging-button" [disabled]="page() <= 1" (click)="previousPage()" aria-label="Página anterior">‹</button>
+
+    @for (currentPage of pages; track currentPage; let index = $index) {
+      @if (index > 0 && isEllipsis(pages[index - 1], currentPage)) {
+        <span class="ag-paging-description">...</span>
+      }
+
+      <button
+        type="button"
+        class="ag-paging-button"
+        [class.ag-paging-button-active]="currentPage === page()"
+        [attr.aria-current]="currentPage === page() ? 'page' : null"
+        [attr.aria-label]="'Página ' + currentPage"
+        (click)="goToPage(currentPage)"
+      >
+        {{ currentPage }}
+      </button>
+    }
+
+    <button type="button" class="ag-paging-button" [disabled]="page() >= totalPages" (click)="nextPage()" aria-label="Página siguiente">
+      ›
+    </button>
+
+    <button type="button" class="ag-paging-button" [disabled]="page() >= totalPages" (click)="lastPage()" aria-label="Última página">
+      ››
+    </button>
+  </span>
+</div>

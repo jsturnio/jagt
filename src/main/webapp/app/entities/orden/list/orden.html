@@ -136,6 +136,16 @@
               </td>
               <td class="text-end">
                 <div class="btn-group">
+                  <button
+                    type="submit"
+                    [routerLink]="['/practica']"
+                    [queryParams]="{ 'filter[ordenId.in]': orden.id }"
+                    class="btn btn-info btn-sm"
+                    data-cy="filterOtherEntityButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline">Show Practicas</span>
+                  </button>
                   <a [routerLink]="['/orden', orden.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
                     <fa-icon icon="eye" />
                     <span class="d-none d-md-inline">Vista</span>

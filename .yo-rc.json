@@ -5,6 +5,7 @@
     "buildTool": "maven",
     "clientFramework": "angular",
     "creationTimestamp": 1702252943173,
+    "defaultCommand": "app",
     "enableTranslation": false,
     "entities": ["Prestacion", "Mutual", "PlanMutual", "Paquete", "Nomenclador", "Empleado", "Bioquimico", "Orden", "Practica"],
     "jhipsterVersion": "9.3.0",

@@ -24,6 +24,8 @@
 
   <jhi-alert />
 
+  <jhi-filter [filters]="filters" />
+
   @if (practicas().length === 0) {
     <div class="alert alert-warning" id="no-result">
       <span>Ningún Practicas encontrado</span>
@@ -110,6 +112,25 @@
           }
         </tbody>
       </table>
+    </div>
+  }
+  @if (practicas().length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems()"
+          [page]="page()"
+          [pageSize]="itemsPerPage()"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        />
+      </div>
     </div>
   }
 </div>

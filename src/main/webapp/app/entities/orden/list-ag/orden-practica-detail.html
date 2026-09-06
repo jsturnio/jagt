@@ -14,6 +14,12 @@
       (selectionChanged)="onSelectionChangedOrden($event)"
     />
   </div>
+  <jhi-ag-grid-pagination
+    [page]="ordenPage()"
+    [pageSize]="ordenItemsPerPage()"
+    [totalItems]="ordenTotalItems()"
+    (pageChange)="navigateToOrdenPage($event)"
+  />
 </section>
 <section class="mb-4">
   <h3>Practicas</h3>
@@ -29,4 +35,10 @@
       (selectionChanged)="onSelectionChangedPractica($event)"
     />
   </div>
+  <jhi-ag-grid-pagination
+    [page]="practicaPage()"
+    [pageSize]="practicaItemsPerPage()"
+    [totalItems]="practicaTotalItems()"
+    (pageChange)="navigateToPracticaPage($event)"
+  />
 </section>

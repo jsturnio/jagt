@@ -17,7 +17,7 @@ const ordenRoute: Routes = [
   {
     path: 'list-ag/orden-practica-detail',
     loadComponent: () => import('./list-ag/orden-practica-detail').then(m => m.OrdenMasterDetail),
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccessService],
   },
   {
     path: 'list-ag',
@@ -25,7 +25,7 @@ const ordenRoute: Routes = [
     data: {
       defaultSort: `id,${ASC}`,
     },
-    canActivate: [UserRouteAccessService],
+    canActivate: [userRouteAccessService],
   },
   {
     path: ':id/view',

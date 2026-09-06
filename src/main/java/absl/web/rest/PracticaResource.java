@@ -1,7 +1,9 @@
 package absl.web.rest;
 
 import absl.repository.PracticaRepository;
+import absl.service.PracticaQueryService;
 import absl.service.PracticaService;
+import absl.service.criteria.PracticaCriteria;
 import absl.service.dto.PracticaDTO;
 import absl.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
@@ -14,9 +16,14 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
 
 /**
@@ -37,9 +44,16 @@ public class PracticaResource {
 
     private final PracticaRepository practicaRepository;
 
-    public PracticaResource(PracticaService practicaService, PracticaRepository practicaRepository) {
+    private final PracticaQueryService practicaQueryService;
+
+    public PracticaResource(
+        PracticaService practicaService,
+        PracticaRepository practicaRepository,
+        PracticaQueryService practicaQueryService
+    ) {
         this.practicaService = practicaService;
         this.practicaRepository = practicaRepository;
+        this.practicaQueryService = practicaQueryService;
     }
 
     /**
@@ -133,17 +147,32 @@ public class PracticaResource {
     /**
      * {@code GET  /practicas} : get all the Practicas.
      *
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
+     * @param pageable the pagination information.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Practicas in body.
      */
     @GetMapping("")
-    public List<PracticaDTO> getAllPracticas(@RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload) {
-        LOG.debug("REST request to get all Practicas");
-        if (eagerload) {
-            return practicaService.findAllWithEagerRelationships();
-        } else {
-            return practicaService.findAll();
-        }
+    public ResponseEntity<List<PracticaDTO>> getAllPracticas(
+        PracticaCriteria criteria,
+        @org.springdoc.core.annotations.ParameterObject Pageable pageable
+    ) {
+        LOG.debug("REST request to get Practicas by criteria: {}", criteria);
+
+        Page<PracticaDTO> page = practicaQueryService.findByCriteria(criteria, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * {@code GET  /practicas/count} : count all the practicas.
+     *
+     * @param criteria the criteria which the requested entities should match.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+     */
+    @GetMapping("/count")
+    public ResponseEntity<Long> countPracticas(PracticaCriteria criteria) {
+        LOG.debug("REST request to count Practicas by criteria: {}", criteria);
+        return ResponseEntity.ok().body(practicaQueryService.countByCriteria(criteria));
     }
 
     /**

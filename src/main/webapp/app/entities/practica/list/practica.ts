@@ -1,13 +1,17 @@
+import { HttpHeaders } from '@angular/common/http';
 import { Component, effect, inject, signal, untracked } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Data, ParamMap, Router, RouterLink } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
+import { NgbPagination } from '@ng-bootstrap/ng-bootstrap/pagination';
 import { combineLatest, filter, map, tap } from 'rxjs';
 
-import { DEFAULT_SORT_DATA, ITEM_DELETED_EVENT, SORT } from 'app/config';
+import { DEFAULT_SORT_DATA, ITEMS_PER_PAGE, ITEM_DELETED_EVENT, PAGE_HEADER, SORT, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config';
 import { Alert, AlertError } from 'app/shared/alert';
+import { Filter, FilterOptions, IFilterOption, IFilterOptions } from 'app/shared/filter';
+import { ItemCount } from 'app/shared/pagination';
 import { SortByDirective, SortDirective, SortService, type SortState, sortStateSignal } from 'app/shared/sort';
 import { PracticaDeleteDialog } from '../delete/practica-delete-dialog';
 import { IPractica } from '../practica.model';
@@ -16,12 +20,17 @@ import { PracticaService } from '../service/practica.service';
 @Component({
   selector: 'jhi-practica',
   templateUrl: './practica.html',
-  imports: [RouterLink, FontAwesomeModule, AlertError, Alert, SortDirective, SortByDirective],
+  imports: [RouterLink, FontAwesomeModule, AlertError, Alert, SortDirective, SortByDirective, Filter, NgbPagination, ItemCount],
 })
 export class Practica {
   readonly practicas = signal<IPractica[]>([]);
 
   sortState = sortStateSignal({});
+  filters: IFilterOptions = new FilterOptions();
+
+  readonly itemsPerPage = signal(ITEMS_PER_PAGE);
+  readonly totalItems = signal(0);
+  readonly page = signal(1);
 
   readonly router = inject(Router);
   protected readonly practicaService = inject(PracticaService);
@@ -35,9 +44,16 @@ export class Practica {
     { initialValue: { queryParamMap: this.activatedRoute.snapshot.queryParamMap, data: this.activatedRoute.snapshot.data } },
   );
   protected readonly sortService = inject(SortService);
+  protected readonly filterOptions = toSignal(this.filters.filterChanges);
   protected modalService = inject(NgbModal);
 
   constructor() {
+    effect(() => {
+      const headers = this.practicaService.practicasResource.headers();
+      if (headers) {
+        this.fillComponentAttributesFromResponseHeader(headers);
+      }
+    });
     effect(() => {
       this.practicas.set(this.fillComponentAttributesFromResponseBody([...this.practicaService.practicas()]));
     });
@@ -48,6 +64,16 @@ export class Practica {
         this.fillComponentAttributeFromRoute(activatedRouteState.queryParamMap, activatedRouteState.data);
         this.load();
       });
+    });
+
+    effect(() => {
+      const filterOptions = this.filterOptions();
+      if (filterOptions) {
+        untracked(() => {
+          // Only watch for filter changes. Other signals should be ignored.
+          this.handleNavigation(1, this.sortState(), filterOptions);
+        });
+      }
     });
   }
 
@@ -70,34 +96,54 @@ export class Practica {
   }
 
   navigateToWithComponentValues(event: SortState): void {
-    this.handleNavigation(event);
+    this.handleNavigation(this.page(), event, this.filters.filterOptions);
+  }
+
+  navigateToPage(page: number): void {
+    this.handleNavigation(page, this.sortState(), this.filters.filterOptions);
   }
 
   protected fillComponentAttributeFromRoute(params: ParamMap, data: Data): void {
+    const page = params.get(PAGE_HEADER);
+    this.page.set(+(page ?? 1));
     this.sortState.set(this.sortService.parseSortParam(params.get(SORT) ?? data[DEFAULT_SORT_DATA]));
-  }
-
-  protected refineData(data: IPractica[]): IPractica[] {
-    const { predicate, order } = this.sortState();
-    return predicate && order ? data.sort(this.sortService.startSort({ predicate, order })) : data;
+    this.filters.initializeFromParams(params);
   }
 
   protected fillComponentAttributesFromResponseBody(data: IPractica[]): IPractica[] {
-    return this.refineData(data);
+    return data;
+  }
+
+  protected fillComponentAttributesFromResponseHeader(headers: HttpHeaders): void {
+    this.totalItems.set(Number(headers.get(TOTAL_COUNT_RESPONSE_HEADER)));
   }
 
   protected queryBackend(): void {
+    const pageToLoad: number = this.page();
     const queryObject: any = {
+      page: pageToLoad - 1,
+      size: this.itemsPerPage(),
       eagerload: true,
       sort: this.sortService.buildSortParam(this.sortState()),
     };
+    for (const filterOption of this.filters.filterOptions) {
+      queryObject[filterOption.name] = filterOption.values;
+    }
     this.practicaService.practicasParams.set(queryObject);
   }
 
-  protected handleNavigation(sortState: SortState): void {
-    const queryParamsObj = {
+  protected handleNavigation(page: number, sortState: SortState, filterOptions?: IFilterOption[]): void {
+    const queryParamsObj: any = {
+      page,
+      size: this.itemsPerPage(),
       sort: this.sortService.buildSortParam(sortState),
     };
+
+    if (filterOptions) {
+      for (const filterOption of filterOptions) {
+        queryParamsObj[filterOption.nameAsQueryParam()] = filterOption.values;
+      }
+    }
 
     this.router.navigate(['./'], {
       relativeTo: this.activatedRoute,

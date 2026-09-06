@@ -4,12 +4,11 @@ import absl.domain.Practica;
 import absl.repository.PracticaRepository;
 import absl.service.dto.PracticaDTO;
 import absl.service.mapper.PracticaMapper;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,27 +77,12 @@ public class PracticaService {
     }
 
     /**
-     * Get all the practicas.
-     *
-     * @return the list of entities.
-     */
-    @Transactional(readOnly = true)
-    public List<PracticaDTO> findAll() {
-        LOG.debug("Request to get all Practicas");
-        return practicaRepository.findAll().stream().map(practicaMapper::toDto).collect(Collectors.toCollection(LinkedList::new));
-    }
-
-    /**
      * Get all the practicas with eager load of many-to-many relationships.
      *
      * @return the list of entities.
      */
-    public List<PracticaDTO> findAllWithEagerRelationships() {
-        return practicaRepository
-            .findAllWithEagerRelationships()
-            .stream()
-            .map(practicaMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
+    public Page<PracticaDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return practicaRepository.findAllWithEagerRelationships(pageable).map(practicaMapper::toDto);
     }
 
     /**
