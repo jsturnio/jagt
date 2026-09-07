@@ -7,7 +7,7 @@ import { ActivatedRoute, Data, ParamMap, Router, RouterLink } from '@angular/rou
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
 import { AgGridAngular } from 'ag-grid-angular';
-import { AllCommunityModule, type CellValueChangedEvent, ColDef, ModuleRegistry, themeBalham } from 'ag-grid-community';
+import { AllCommunityModule, type CellValueChangedEvent, ColDef, ModuleRegistry, themeBalham, ITextFilterParams } from 'ag-grid-community';
 import { Subscription, combineLatest, filter, tap } from 'rxjs';
 
 import { DEFAULT_SORT_DATA, ITEM_DELETED_EVENT, SORT } from 'app/config/navigation.constants';
@@ -49,6 +49,14 @@ export class OrdenAg implements OnInit, OnDestroy {
     resizable: true,
     editable: true,
     floatingFilter: true,
+    /*
+      filterParams: {
+
+      buttons: ["clear", "apply"],
+closeOnApply: true,
+
+    } as ITextFilterParams,
+*/
   };
 
   onCellValueChanged(event: CellValueChangedEvent): void {
