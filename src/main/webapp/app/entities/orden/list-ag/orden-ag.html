@@ -3,10 +3,6 @@
     <span>Ordens</span>
 
     <div class="d-flex justify-content-end">
-      <button (click)="toggleFloatingFilters()">
-        {{ showFloatingFilters ? 'Ocultar filtros' : 'Mostrar filtros' }}
-      </button>
-
       <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
         <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
         <span>Refrescar lista</span>
@@ -29,6 +25,8 @@
   <jhi-alert />
 
   <jhi-filter [filters]="filters" />
+
+  <jhi-orden-ag-filter (filtersChange)="onAboveFiltersChange($event)" />
 
   @if (ordens().length === 0) {
     <div class="alert alert-warning" id="no-result">

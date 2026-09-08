@@ -1,6 +1,7 @@
 {
   "annotations": {
     "changelogDate": "20231211001023",
+    "genFilterAbove": true,
     "genMasterDetail": "Practica"
   },
   "applications": ["jag"],

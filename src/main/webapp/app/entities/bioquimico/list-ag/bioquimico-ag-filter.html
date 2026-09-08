@@ -1,0 +1,11 @@
+<div class="mb-3">
+  <label class="form-label" for="user-filter">User</label>
+  <jhi-entity-selector
+    inputId="user-filter"
+    [options]="userOptions()"
+    [multiple]="true"
+    [autocomplete]="true"
+    placeholder="Buscar User"
+    (valueChange)="onUserChange($event)"
+  />
+</div>

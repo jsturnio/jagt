@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+
+:host ::ng-deep .p-select,
+:host ::ng-deep .p-autocomplete {
+  width: 100%;
+}

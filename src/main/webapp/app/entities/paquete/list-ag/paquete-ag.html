@@ -26,6 +26,8 @@
 
   <jhi-filter [filters]="filters" />
 
+  <jhi-paquete-ag-filter (filtersChange)="onAboveFiltersChange($event)" />
+
   @if (paquetes().length === 0) {
     <div class="alert alert-warning" id="no-result">
       <span>Ningún Paquetes encontrado</span>

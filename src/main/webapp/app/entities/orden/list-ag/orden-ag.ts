@@ -7,7 +7,7 @@ import { ActivatedRoute, Data, ParamMap, Router, RouterLink } from '@angular/rou
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
 import { AgGridAngular } from 'ag-grid-angular';
-import { AllCommunityModule, type CellValueChangedEvent, ColDef, ModuleRegistry, themeBalham, ITextFilterParams } from 'ag-grid-community';
+import { AllCommunityModule, type CellValueChangedEvent, ColDef, ModuleRegistry, themeBalham } from 'ag-grid-community';
 import { Subscription, combineLatest, filter, tap } from 'rxjs';
 
 import { DEFAULT_SORT_DATA, ITEM_DELETED_EVENT, SORT } from 'app/config/navigation.constants';
@@ -23,6 +23,7 @@ import { OrdenDeleteDialog } from '../delete/orden-delete-dialog';
 import { IOrden } from '../orden.model';
 import { OrdenService } from '../service/orden.service';
 
+import { OrdenAgFilter } from './orden-ag-filter';
 import { getOrdenColumnDefs } from './orden-grid.config';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -30,7 +31,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
   selector: 'jhi-orden-ag',
   templateUrl: './orden-ag.html',
-  imports: [RouterLink, FormsModule, FontAwesomeModule, AlertError, Alert, Filter, AgGridPaginationComponent, AgGridAngular],
+  imports: [RouterLink, FormsModule, FontAwesomeModule, AlertError, Alert, Filter, AgGridPaginationComponent, AgGridAngular, OrdenAgFilter],
 })
 export class OrdenAg implements OnInit, OnDestroy {
   public tema = themeBalham;
@@ -40,7 +41,8 @@ export class OrdenAg implements OnInit, OnDestroy {
 
   readonly localeText = AG_GRID_LOCALE_ES;
   readonly gridFilter = signal<Record<string, string | number | boolean>>({});
-
+  readonly aboveFilters = signal<Record<string, string[]>>({});
+  readonly routeInitialized = signal(false);
   columnDefs: ColDef[] = getOrdenColumnDefs(this.actionsCellRenderer.bind(this));
 
   defaultColDef: ColDef = {
@@ -48,15 +50,6 @@ export class OrdenAg implements OnInit, OnDestroy {
     filter: true,
     resizable: true,
     editable: true,
-    floatingFilter: true,
-    /*
-      filterParams: {
-
-      buttons: ["clear", "apply"],
-closeOnApply: true,
-
-    } as ITextFilterParams,
-*/
   };
 
   onCellValueChanged(event: CellValueChangedEvent): void {
@@ -66,22 +59,16 @@ closeOnApply: true,
     });
   }
 
-  showFloatingFilters = true;
-
-  toggleFloatingFilters() {
-    this.showFloatingFilters = !this.showFloatingFilters;
-
-    this.columnDefs = this.columnDefs.map(col => ({
-      ...col,
-      floatingFilter: this.showFloatingFilters,
-    }));
-  }
-
   onFilterChanged(event: any): void {
     const model = event.api.getFilterModel();
     this.gridFilter.set(buildGridFilterParams(model));
     this.page.set(1);
     this.load();
+  }
+
+  onAboveFiltersChange(filters: Record<string, string[]>): void {
+    this.aboveFilters.update(current => ({ ...current, ...filters }));
+    this.handleNavigation(1, this.sortState(), this.filters.filterOptions);
   }
 
   sortState = sortStateSignal({});
@@ -114,7 +101,7 @@ closeOnApply: true,
 
     effect(() => {
       const filterOptions = this.filterOptions();
-      if (filterOptions) {
+      if (filterOptions && this.routeInitialized()) {
         untracked(() => {
           // Only watch for filter changes. Other signals should be ignored.
           this.handleNavigation(1, this.sortState(), filterOptions);
@@ -188,6 +175,28 @@ closeOnApply: true,
     this.page.set(+(page ?? 1));
     this.sortState.set(this.sortService.parseSortParam(params.get(SORT) ?? data[DEFAULT_SORT_DATA]));
     this.filters.initializeFromParams(params);
+    this.aboveFilters.update(filters => ({
+      ...filters,
+      '0.contains': params
+        .getAll('0.contains')
+        .flatMap(value => value.split(','))
+        .filter(Boolean),
+    }));
+    this.aboveFilters.update(filters => ({
+      ...filters,
+      '1.contains': params
+        .getAll('1.contains')
+        .flatMap(value => value.split(','))
+        .filter(Boolean),
+    }));
+    this.aboveFilters.update(filters => ({
+      ...filters,
+      '2.contains': params
+        .getAll('2.contains')
+        .flatMap(value => value.split(','))
+        .filter(Boolean),
+    }));
+    this.routeInitialized.set(true);
   }
 
   protected fillComponentAttributesFromResponseBody(data: IOrden[]): IOrden[] {
@@ -209,6 +218,7 @@ closeOnApply: true,
       queryObject[filterOption.name] = filterOption.values;
     }
     Object.assign(queryObject, this.gridFilter());
+    Object.assign(queryObject, this.aboveFilters());
     this.ordenService.ordensParams.set(queryObject);
   }
 
@@ -225,6 +235,7 @@ closeOnApply: true,
       }
     }
     Object.assign(queryParamsObj, this.gridFilter());
+    Object.assign(queryParamsObj, this.aboveFilters());
 
     this.router.navigate(['./'], {
       relativeTo: this.activatedRoute,

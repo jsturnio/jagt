@@ -1,6 +1,7 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ApplicationConfig, LOCALE_ID, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
   NavigationError,
   Router,
@@ -14,7 +15,9 @@ import {
 import { provideServiceWorker } from '@angular/service-worker';
 
 import { NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap/datepicker';
+import Aura from '@primeuix/themes/aura';
 import { environment } from 'environments/environment';
+import { providePrimeNG } from 'primeng/config';
 
 import { authExpiredInterceptor } from 'app/core/interceptor/auth-expired.interceptor';
 import { authInterceptor } from 'app/core/interceptor/auth.interceptor';
@@ -48,6 +51,12 @@ if (environment.DEBUG_INFO_ENABLED) {
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideAnimationsAsync(),
+    providePrimeNG({
+      theme: { preset: Aura },
+      license:
+        'eyJpZCI6IjFjNjFjMDUwLTkxZjYtNDYyYy04NWVmLTg5MzQ0MDAxYmM1ZiIsInByb2R1Y3QiOiJwcmltZXVpIiwidGllciI6ImNvbW11bml0eSIsInR5cGUiOiJkZXYiLCJpYXQiOjE3ODg4NzEzNjMsImV4cCI6MTgyMDQwNzM2M30.dzXns1FMF6pt-CqDurP2bzi-CO7tmleFQnmihYSdLgzpC0x2-znBDJ7y4-DKCpIp8zdXuS_pZ_uZGVNRJrTwAQ',
+    }),
     provideRouter(routes, ...routerFeatures),
     // Set this to true to enable service worker (PWA)
     provideServiceWorker('ngsw-worker.js', { enabled: false }),

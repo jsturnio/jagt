@@ -1,0 +1,31 @@
+@if (autocomplete) {
+  <p-autocomplete
+    [ngModel]="selectedOptions"
+    [inputId]="inputId"
+    [suggestions]="suggestions"
+    optionLabel="label"
+    [multiple]="multiple"
+    [dropdown]="true"
+    [forceSelection]="true"
+    [placeholder]="placeholder"
+    (completeMethod)="search($event)"
+    (ngModelChange)="onAutocompleteModelChange($event)"
+    (onSelect)="emitAutocompleteSelection($event.value)"
+    (onUnselect)="emitAutocompleteSelection()"
+    (onClear)="emitAutocompleteSelection()"
+  />
+} @else {
+  <p-select
+    [(ngModel)]="value"
+    [inputId]="inputId"
+    [options]="options"
+    [optionLabel]="optionLabel"
+    [optionValue]="optionValue"
+    [multiple]="multiple"
+    [filter]="true"
+    [showClear]="true"
+    [placeholder]="placeholder"
+    (ngModelChange)="onValueChange($event)"
+    (keydown.enter)="commitValue()"
+  />
+}

@@ -1,0 +1,11 @@
+<div class="mb-3">
+  <label class="form-label" for="mutual-filter">Mutual</label>
+  <jhi-entity-selector
+    inputId="mutual-filter"
+    [options]="mutualOptions()"
+    [multiple]="true"
+    [autocomplete]="true"
+    placeholder="Buscar Mutual"
+    (valueChange)="onMutualChange($event)"
+  />
+</div>

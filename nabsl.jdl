@@ -66,6 +66,7 @@ enum EstadoPaquete {
 }
 
 /* Existe Paquete de Mutual y Paquete de Bioquimico */
+@GenFilterAbove
 entity  Paquete {
     /* Nombre autogenerado: Date+mutual-nombre+ categoriaPlan+IVA */
     
@@ -87,7 +88,7 @@ enum TipoNomenclador {
 entity Nomenclador {
     nombre      String  required    maxlength(12)
     descripcion String  maxlength(100)
-    tipo        TipoNomenclador required
+    /* tipo        TipoNomenclador required  */
 }
 
 entity Empleado {
@@ -106,6 +107,7 @@ enum EstadoSocio {
     SOCIO_ACTIVO,NO_CARGA,INACTIVO
 }
 
+@GenFilterAbove
 entity Bioquimico {
     matricula       Long
     cuit            String
@@ -135,6 +137,7 @@ enum Gender {
 
 // @skipCache
 @GenMasterDetail(Practica)
+@GenFilterAbove
 entity Orden {
 
  /* Definidos por CamposRequeridos */

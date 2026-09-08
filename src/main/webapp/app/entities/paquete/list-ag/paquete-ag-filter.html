@@ -1,0 +1,11 @@
+<div class="mb-3">
+  <label class="form-label" for="plan-filter">Plan</label>
+  <jhi-entity-selector
+    inputId="plan-filter"
+    [options]="planOptions()"
+    [multiple]="true"
+    [autocomplete]="true"
+    placeholder="Buscar Plan"
+    (valueChange)="onPlanChange($event)"
+  />
+</div>

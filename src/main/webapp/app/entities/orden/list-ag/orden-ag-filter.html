@@ -1,0 +1,33 @@
+<div class="mb-3">
+  <label class="form-label" for="paquete-filter">Paquete</label>
+  <jhi-entity-selector
+    inputId="paquete-filter"
+    [options]="paqueteOptions()"
+    [multiple]="true"
+    [autocomplete]="true"
+    placeholder="Buscar Paquete"
+    (valueChange)="onPaqueteChange($event)"
+  />
+</div>
+<div class="mb-3">
+  <label class="form-label" for="usuario-filter">Usuario</label>
+  <jhi-entity-selector
+    inputId="usuario-filter"
+    [options]="usuarioOptions()"
+    [multiple]="true"
+    [autocomplete]="true"
+    placeholder="Buscar Usuario"
+    (valueChange)="onUsuarioChange($event)"
+  />
+</div>
+<div class="mb-3">
+  <label class="form-label" for="bioquimico-filter">Bioquimico</label>
+  <jhi-entity-selector
+    inputId="bioquimico-filter"
+    [options]="bioquimicoOptions()"
+    [multiple]="true"
+    [autocomplete]="true"
+    placeholder="Buscar Bioquimico"
+    (valueChange)="onBioquimicoChange($event)"
+  />
+</div>

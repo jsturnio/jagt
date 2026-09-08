@@ -23,6 +23,7 @@ import { MutualDeleteDialog } from '../delete/mutual-delete-dialog';
 import { IMutual } from '../mutual.model';
 import { MutualService } from '../service/mutual.service';
 
+import { MutualAgFilter } from './mutual-ag-filter';
 import { getMutualColumnDefs } from './mutual-grid.config';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -30,7 +31,17 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
   selector: 'jhi-mutual-ag',
   templateUrl: './mutual-ag.html',
-  imports: [RouterLink, FormsModule, FontAwesomeModule, AlertError, Alert, Filter, AgGridPaginationComponent, AgGridAngular],
+  imports: [
+    RouterLink,
+    FormsModule,
+    FontAwesomeModule,
+    AlertError,
+    Alert,
+    Filter,
+    AgGridPaginationComponent,
+    AgGridAngular,
+    MutualAgFilter,
+  ],
 })
 export class MutualAg implements OnInit, OnDestroy {
   public tema = themeBalham;
@@ -40,7 +51,8 @@ export class MutualAg implements OnInit, OnDestroy {
 
   readonly localeText = AG_GRID_LOCALE_ES;
   readonly gridFilter = signal<Record<string, string | number | boolean>>({});
-
+  readonly aboveFilters = signal<Record<string, string[]>>({});
+  readonly routeInitialized = signal(false);
   columnDefs: ColDef[] = getMutualColumnDefs(this.actionsCellRenderer.bind(this));
 
   defaultColDef: ColDef = {
@@ -62,6 +74,11 @@ export class MutualAg implements OnInit, OnDestroy {
     this.gridFilter.set(buildGridFilterParams(model));
     this.page.set(1);
     this.load();
+  }
+
+  onAboveFiltersChange(filters: Record<string, string[]>): void {
+    this.aboveFilters.update(current => ({ ...current, ...filters }));
+    this.handleNavigation(1, this.sortState(), this.filters.filterOptions);
   }
 
   sortState = sortStateSignal({});
@@ -94,7 +111,7 @@ export class MutualAg implements OnInit, OnDestroy {
 
     effect(() => {
       const filterOptions = this.filterOptions();
-      if (filterOptions) {
+      if (filterOptions && this.routeInitialized()) {
         untracked(() => {
           // Only watch for filter changes. Other signals should be ignored.
           this.handleNavigation(1, this.sortState(), filterOptions);
@@ -168,6 +185,7 @@ export class MutualAg implements OnInit, OnDestroy {
     this.page.set(+(page ?? 1));
     this.sortState.set(this.sortService.parseSortParam(params.get(SORT) ?? data[DEFAULT_SORT_DATA]));
     this.filters.initializeFromParams(params);
+    this.routeInitialized.set(true);
   }
 
   protected fillComponentAttributesFromResponseBody(data: IMutual[]): IMutual[] {
@@ -189,6 +207,7 @@ export class MutualAg implements OnInit, OnDestroy {
       queryObject[filterOption.name] = filterOption.values;
     }
     Object.assign(queryObject, this.gridFilter());
+    Object.assign(queryObject, this.aboveFilters());
     this.mutualService.mutualsParams.set(queryObject);
   }
 
@@ -205,6 +224,7 @@ export class MutualAg implements OnInit, OnDestroy {
       }
     }
     Object.assign(queryParamsObj, this.gridFilter());
+    Object.assign(queryParamsObj, this.aboveFilters());
 
     this.router.navigate(['./'], {
       relativeTo: this.activatedRoute,

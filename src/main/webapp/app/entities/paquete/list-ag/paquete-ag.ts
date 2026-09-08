@@ -23,6 +23,7 @@ import { PaqueteDeleteDialog } from '../delete/paquete-delete-dialog';
 import { IPaquete } from '../paquete.model';
 import { PaqueteService } from '../service/paquete.service';
 
+import { PaqueteAgFilter } from './paquete-ag-filter';
 import { getPaqueteColumnDefs } from './paquete-grid.config';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -30,7 +31,17 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
   selector: 'jhi-paquete-ag',
   templateUrl: './paquete-ag.html',
-  imports: [RouterLink, FormsModule, FontAwesomeModule, AlertError, Alert, Filter, AgGridPaginationComponent, AgGridAngular],
+  imports: [
+    RouterLink,
+    FormsModule,
+    FontAwesomeModule,
+    AlertError,
+    Alert,
+    Filter,
+    AgGridPaginationComponent,
+    AgGridAngular,
+    PaqueteAgFilter,
+  ],
 })
 export class PaqueteAg implements OnInit, OnDestroy {
   public tema = themeBalham;
@@ -40,7 +51,8 @@ export class PaqueteAg implements OnInit, OnDestroy {
 
   readonly localeText = AG_GRID_LOCALE_ES;
   readonly gridFilter = signal<Record<string, string | number | boolean>>({});
-
+  readonly aboveFilters = signal<Record<string, string[]>>({});
+  readonly routeInitialized = signal(false);
   columnDefs: ColDef[] = getPaqueteColumnDefs(this.actionsCellRenderer.bind(this));
 
   defaultColDef: ColDef = {
@@ -62,6 +74,11 @@ export class PaqueteAg implements OnInit, OnDestroy {
     this.gridFilter.set(buildGridFilterParams(model));
     this.page.set(1);
     this.load();
+  }
+
+  onAboveFiltersChange(filters: Record<string, string[]>): void {
+    this.aboveFilters.update(current => ({ ...current, ...filters }));
+    this.handleNavigation(1, this.sortState(), this.filters.filterOptions);
   }
 
   sortState = sortStateSignal({});
@@ -94,7 +111,7 @@ export class PaqueteAg implements OnInit, OnDestroy {
 
     effect(() => {
       const filterOptions = this.filterOptions();
-      if (filterOptions) {
+      if (filterOptions && this.routeInitialized()) {
         untracked(() => {
           // Only watch for filter changes. Other signals should be ignored.
           this.handleNavigation(1, this.sortState(), filterOptions);
@@ -168,6 +185,14 @@ export class PaqueteAg implements OnInit, OnDestroy {
     this.page.set(+(page ?? 1));
     this.sortState.set(this.sortService.parseSortParam(params.get(SORT) ?? data[DEFAULT_SORT_DATA]));
     this.filters.initializeFromParams(params);
+    this.aboveFilters.update(filters => ({
+      ...filters,
+      '0.contains': params
+        .getAll('0.contains')
+        .flatMap(value => value.split(','))
+        .filter(Boolean),
+    }));
+    this.routeInitialized.set(true);
   }
 
   protected fillComponentAttributesFromResponseBody(data: IPaquete[]): IPaquete[] {
@@ -189,6 +214,7 @@ export class PaqueteAg implements OnInit, OnDestroy {
       queryObject[filterOption.name] = filterOption.values;
     }
     Object.assign(queryObject, this.gridFilter());
+    Object.assign(queryObject, this.aboveFilters());
     this.paqueteService.paquetesParams.set(queryObject);
   }
 
@@ -205,6 +231,7 @@ export class PaqueteAg implements OnInit, OnDestroy {
       }
     }
     Object.assign(queryParamsObj, this.gridFilter());
+    Object.assign(queryParamsObj, this.aboveFilters());
 
     this.router.navigate(['./'], {
       relativeTo: this.activatedRoute,

@@ -23,6 +23,7 @@ import { PrestacionDeleteDialog } from '../delete/prestacion-delete-dialog';
 import { IPrestacion } from '../prestacion.model';
 import { PrestacionService } from '../service/prestacion.service';
 
+import { PrestacionAgFilter } from './prestacion-ag-filter';
 import { getPrestacionColumnDefs } from './prestacion-grid.config';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -30,7 +31,17 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 @Component({
   selector: 'jhi-prestacion-ag',
   templateUrl: './prestacion-ag.html',
-  imports: [RouterLink, FormsModule, FontAwesomeModule, AlertError, Alert, Filter, AgGridPaginationComponent, AgGridAngular],
+  imports: [
+    RouterLink,
+    FormsModule,
+    FontAwesomeModule,
+    AlertError,
+    Alert,
+    Filter,
+    AgGridPaginationComponent,
+    AgGridAngular,
+    PrestacionAgFilter,
+  ],
 })
 export class PrestacionAg implements OnInit, OnDestroy {
   public tema = themeBalham;
@@ -40,7 +51,8 @@ export class PrestacionAg implements OnInit, OnDestroy {
 
   readonly localeText = AG_GRID_LOCALE_ES;
   readonly gridFilter = signal<Record<string, string | number | boolean>>({});
-
+  readonly aboveFilters = signal<Record<string, string[]>>({});
+  readonly routeInitialized = signal(false);
   columnDefs: ColDef[] = getPrestacionColumnDefs(this.actionsCellRenderer.bind(this));
 
   defaultColDef: ColDef = {
@@ -62,6 +74,11 @@ export class PrestacionAg implements OnInit, OnDestroy {
     this.gridFilter.set(buildGridFilterParams(model));
     this.page.set(1);
     this.load();
+  }
+
+  onAboveFiltersChange(filters: Record<string, string[]>): void {
+    this.aboveFilters.update(current => ({ ...current, ...filters }));
+    this.handleNavigation(1, this.sortState(), this.filters.filterOptions);
   }
 
   sortState = sortStateSignal({});
@@ -94,7 +111,7 @@ export class PrestacionAg implements OnInit, OnDestroy {
 
     effect(() => {
       const filterOptions = this.filterOptions();
-      if (filterOptions) {
+      if (filterOptions && this.routeInitialized()) {
         untracked(() => {
           // Only watch for filter changes. Other signals should be ignored.
           this.handleNavigation(1, this.sortState(), filterOptions);
@@ -168,6 +185,14 @@ export class PrestacionAg implements OnInit, OnDestroy {
     this.page.set(+(page ?? 1));
     this.sortState.set(this.sortService.parseSortParam(params.get(SORT) ?? data[DEFAULT_SORT_DATA]));
     this.filters.initializeFromParams(params);
+    this.aboveFilters.update(filters => ({
+      ...filters,
+      '0.contains': params
+        .getAll('0.contains')
+        .flatMap(value => value.split(','))
+        .filter(Boolean),
+    }));
+    this.routeInitialized.set(true);
   }
 
   protected fillComponentAttributesFromResponseBody(data: IPrestacion[]): IPrestacion[] {
@@ -189,6 +214,7 @@ export class PrestacionAg implements OnInit, OnDestroy {
       queryObject[filterOption.name] = filterOption.values;
     }
     Object.assign(queryObject, this.gridFilter());
+    Object.assign(queryObject, this.aboveFilters());
     this.prestacionService.prestacionsParams.set(queryObject);
   }
 
@@ -205,6 +231,7 @@ export class PrestacionAg implements OnInit, OnDestroy {
       }
     }
     Object.assign(queryParamsObj, this.gridFilter());
+    Object.assign(queryParamsObj, this.aboveFilters());
 
     this.router.navigate(['./'], {
       relativeTo: this.activatedRoute,

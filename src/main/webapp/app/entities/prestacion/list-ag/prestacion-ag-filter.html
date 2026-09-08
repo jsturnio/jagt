@@ -1,0 +1,11 @@
+<div class="mb-3">
+  <label class="form-label" for="nomenclador-filter">Nomenclador</label>
+  <jhi-entity-selector
+    inputId="nomenclador-filter"
+    [options]="nomencladorOptions()"
+    [multiple]="true"
+    [autocomplete]="true"
+    placeholder="Buscar Nomenclador"
+    (valueChange)="onNomencladorChange($event)"
+  />
+</div>

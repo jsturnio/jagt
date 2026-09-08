@@ -1,0 +1,22 @@
+<div class="mb-3">
+  <label class="form-label" for="prestacion-filter">Prestacion</label>
+  <jhi-entity-selector
+    inputId="prestacion-filter"
+    [options]="prestacionOptions()"
+    [multiple]="true"
+    [autocomplete]="true"
+    placeholder="Buscar Prestacion"
+    (valueChange)="onPrestacionChange($event)"
+  />
+</div>
+<div class="mb-3">
+  <label class="form-label" for="orden-filter">Orden</label>
+  <jhi-entity-selector
+    inputId="orden-filter"
+    [options]="ordenOptions()"
+    [multiple]="true"
+    [autocomplete]="true"
+    placeholder="Buscar Orden"
+    (valueChange)="onOrdenChange($event)"
+  />
+</div>

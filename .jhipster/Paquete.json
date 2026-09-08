@@ -1,6 +1,7 @@
 {
   "annotations": {
-    "changelogDate": "20231211000623"
+    "changelogDate": "20231211000623",
+    "genFilterAbove": true
   },
   "applications": ["jag"],
   "dto": "mapstruct",

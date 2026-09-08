@@ -4,32 +4,32 @@
     "version": "2.0.0",
     "tasks": [
         {
-        "label": "🚀 Start",
-        "type": "shell",
-        "command": "./npmw run start",
-        "options": {
-            "cwd": "${workspaceFolder}"
-        },
-        "presentation": {
-            "panel": "new",
-            "reveal": "always",
-            "focus": true
-        },
-        "problemMatcher": []
+            "label": "🚀 Start",
+            "type": "shell",
+            "command": "./npmw run start",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "panel": "new",
+                "reveal": "always",
+                "focus": true
+            },
+            "problemMatcher": []
         },
         {
-        "label": "🚀 Backend Start",
-        "type": "shell",
-        "command": "./npmw run backend:start",
-        "options": {
-            "cwd": "${workspaceFolder}"
-        },
-        "presentation": {
-            "panel": "new",
-            "reveal": "always",
-            "focus": true
-        },
-        "problemMatcher": []
+            "label": "🚀 Backend Start",
+            "type": "shell",
+            "command": "./npmw run backend:start",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "panel": "new",
+                "reveal": "always",
+                "focus": true
+            },
+            "problemMatcher": []
         }
     ]
 }

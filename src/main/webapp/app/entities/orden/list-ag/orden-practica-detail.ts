@@ -45,12 +45,9 @@ export class OrdenMasterDetail implements OnInit {
       this.ordens.set(rows);
     });
     effect(() => {
-      this.practicas.set([...this.practicaService.practicas()]);
-      /*
       const rows = [...this.practicaService.practicas()];
       const parentId = this.selected0()?.id;
       this.practicas.set(parentId == null ? [] : rows.filter(row => row.orden?.id === parentId));
-      */
     });
 
     effect(() => {

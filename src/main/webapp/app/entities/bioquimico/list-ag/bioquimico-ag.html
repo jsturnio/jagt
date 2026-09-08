@@ -26,6 +26,8 @@
 
   <jhi-filter [filters]="filters" />
 
+  <jhi-bioquimico-ag-filter (filtersChange)="onAboveFiltersChange($event)" />
+
   @if (bioquimicos().length === 0) {
     <div class="alert alert-warning" id="no-result">
       <span>Ningún Bioquimicos encontrado</span>
